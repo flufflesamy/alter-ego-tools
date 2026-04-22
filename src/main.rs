@@ -1,11 +1,12 @@
 mod application;
 mod config;
-mod window;
+mod tools;
+mod ui;
 
-use gettextrs::{gettext, LocaleCategory};
+use gettextrs::{LocaleCategory, gettext};
 use gtk::{gio, glib};
 
-use self::application::ExampleApplication;
+use self::application::AEToolsApp;
 use self::config::{GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
 
 fn main() -> glib::ExitCode {
@@ -23,7 +24,7 @@ fn main() -> glib::ExitCode {
     let res = gio::Resource::load(*RESOURCES_FILE).expect("Could not load gresource file");
     gio::resources_register(&res);
 
-    let app = ExampleApplication::default();
+    let app = AEToolsApp::default();
     app.run()
 }
 #[cfg(test)]

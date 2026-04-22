@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=Alter Ego Tools
-# FIXME Set the project summary
-Comment=Write a GTK + Rust application
+Comment=Tools for Alter Ego moderators.
 Type=Application
 Exec=alter-ego-tools
 Terminal=false

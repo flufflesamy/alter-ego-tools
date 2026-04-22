@@ -9,3 +9,6 @@
 /.flatpak/
 /vendor
 /.vscode
+/subprojects/blueprint-compiler
+.buildconfig
+*.syscap

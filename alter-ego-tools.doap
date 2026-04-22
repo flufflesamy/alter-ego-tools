@@ -1,34 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:foaf="http://xmlns.com/foaf/0.1/"
-         xmlns:gnome="http://api.gnome.org/doap-extensions#"
-         xmlns="http://usefulinc.com/ns/doap#">
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gnome="http://api.gnome.org/doap-extensions#" xmlns="http://usefulinc.com/ns/doap#">
 
   <name xml:lang="en">Alter Ego Tools</name>
-  <!-- FIXME Set the project summary -->
   <shortdesc xml:lang="en">
-    Write a GTK + Rust application
+    Tools for writing Alter Ego worlds.
   </shortdesc>
-  <!-- FIXME Set the project git url -->
-  <bug-database rdf:resource="https://gitlab.gnome.org/bilelmoussaoui/alter-ego-tools/" />
+  <bug-database rdf:resource="https://github.com/flufflesamy/alter-ego-tools/"/>
 
-  <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
+  <category rdf:resource="http://api.gnome.org/doap-extensions#apps"/>
   <programming-language>Rust</programming-language>
 
   <maintainer>
     <foaf:Person>
       <foaf:name>Amy Poon</foaf:name>
-      <foaf:mbox rdf:resource="mailto:amy@amypoon.me" />
-      <!-- FIXME Set your gnome user id here -->
-      <!-- <gnome:userid>gnome_user_id</gnome:userid> -->
+      <foaf:mbox rdf:resource="mailto:amy@amypoon.me"/>
       <foaf:account>
         <foaf:OnlineAccount>
-          <!-- FIXME Set your gitlab handle here, rdf:resource also accepts github.com or gitlab.com -->
-          <!-- <foaf:accountServiceHomepage rdf:resource="https://gitlab.gnome.org" /> -->
-          <!-- <foaf:accountName>gitlab_user_handle</foaf:accountName> -->
+          <foaf:accountServiceHomepage rdf:resource="https://github.com"/>
+          <foaf:accountName>flufflesamy</foaf:accountName>
         </foaf:OnlineAccount>
       </foaf:account>
     </foaf:Person>
   </maintainer>
 </Project>
+

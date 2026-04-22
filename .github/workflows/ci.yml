@@ -10,7 +10,7 @@ jobs:
     name: Rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -24,13 +24,13 @@ jobs:
     name: Flatpak
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-48
-      options: --privileged
+      image: bilelmoussaoui/flatpak-github-actions:gnome-50
+      options: --privilege
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: alter-ego-tools.flatpak
-        manifest-path: build-aux/me.amypoon.AlterEgoTools.Devel.json
+        manifest-path: build-aux/com.flufflesamy.AlterEgoTools.Devel.json
         run-tests: true
         cache-key: flatpak-builder-${{ github.sha }}

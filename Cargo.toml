@@ -1,13 +1,21 @@
 [package]
 name = "alter-ego-tools"
 authors = ["Amy Poon <amy@amypoon.me>"]
-edition = "2021"
+edition = "2024"
 
 [profile.release]
 lto = true
 
 [dependencies]
+anyhow = "1.0.102"
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
-gtk = { version = "0.10", package = "gtk4", features = ["v4_8"] }
-tracing = "0.1.37"
+gtk = { version = "0.11", package = "gtk4", features = ["gnome_50", "blueprint"] }
+regex = "1.12.3"
+tracing = "0.1.44"
 tracing-subscriber = "0.3"
+
+[dependencies.adw]
+package = "libadwaita"
+version = "0.9"
+features = ["v1_9"]
+

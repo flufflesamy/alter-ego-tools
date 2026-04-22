@@ -12,9 +12,9 @@ include:
 
 variables:
   BUNDLE: "alter-ego-tools-nightly.flatpak"
-  MANIFEST_PATH: "build-aux/me.amypoon.AlterEgoTools.Devel.json"
+  MANIFEST_PATH: "build-aux/com.flufflesamy.AlterEgoTools.Devel.json"
   FLATPAK_MODULE: "alter-ego-tools"
-  APP_ID: "me.amypoon.AlterEgoTools.Devel"
+  APP_ID: "com.flufflesamy.AlterEgoTools.Devel"
   RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
 
 flatpak:

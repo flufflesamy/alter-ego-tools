@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $AETApplicationWindow: Adw.ApplicationWindow {
+  default-width: 980;
+  default-height: 640;
+  width-request: 450;
+  height-request: 300;
+  maximized: false;
+
+  Adw.Breakpoint {
+    condition ("max-width: 800sp")
+
+    setters {
+      split_view.collapsed: true;
+    }
+  }
+
+  content: Adw.NavigationSplitView split_view {
+    max-sidebar-width: 250;
+    show-content: true;
+
+    sidebar: $AETSidebar sidebar {};
+
+    content: $AETContent content {};
+  };
+}
+

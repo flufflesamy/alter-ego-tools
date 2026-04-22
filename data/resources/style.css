@@ -2,3 +2,12 @@
   font-size: 36px;
   font-weight: bold;
 }
+
+label.description {
+  font-size: 16px;
+}
+
+textview.view {
+  border-radius: 10px;
+  padding: 10px;
+}

@@ -1,0 +1,137 @@
+use adw::prelude::*;
+use adw::subclass::prelude::*;
+use gtk::{gio, glib};
+
+use crate::application::AEToolsApp;
+use crate::config::{APP_ID, PROFILE};
+
+use crate::ui::content::Content;
+use crate::ui::sidebar::Sidebar;
+
+mod imp {
+    use std::cell::OnceCell;
+
+    use super::*;
+
+    #[derive(Default, Debug, gtk::CompositeTemplate)]
+    #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/window.ui")]
+    pub struct AETApplicationWindow {
+        pub settings: OnceCell<gio::Settings>,
+        #[template_child]
+        pub split_view: TemplateChild<adw::NavigationSplitView>,
+        #[template_child]
+        pub sidebar: TemplateChild<Sidebar>,
+        #[template_child]
+        pub content: TemplateChild<Content>,
+    }
+
+    #[glib::object_subclass]
+    impl ObjectSubclass for AETApplicationWindow {
+        const NAME: &'static str = "AETApplicationWindow";
+        type Type = super::AETApplicationWindow;
+        type ParentType = adw::ApplicationWindow;
+
+        fn class_init(klass: &mut Self::Class) {
+            klass.bind_template();
+            // klass.bind_template_callbacks();
+        }
+
+        fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
+            obj.init_template();
+        }
+    }
+
+    impl ObjectImpl for AETApplicationWindow {
+        fn constructed(&self) {
+            self.parent_constructed();
+            let obj = self.obj();
+
+            if *PROFILE == "Devel" {
+                obj.add_css_class("devel");
+            }
+
+            obj.setup_settings();
+            obj.setup_actions();
+            obj.bind_settings();
+            obj.init_sidebar();
+        }
+    }
+
+    impl WidgetImpl for AETApplicationWindow {}
+
+    impl WindowImpl for AETApplicationWindow {}
+
+    impl ApplicationWindowImpl for AETApplicationWindow {}
+
+    impl AdwApplicationWindowImpl for AETApplicationWindow {}
+
+    //    #[gtk::template_callbacks]
+    //    impl AETApplicationWindow {
+    //    }
+}
+
+glib::wrapper! {
+    pub struct AETApplicationWindow(ObjectSubclass<imp::AETApplicationWindow>)
+        @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow,
+        @implements gio::ActionGroup, gio::ActionMap, gtk::Accessible, gtk::Buildable,
+                    gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
+}
+
+impl AETApplicationWindow {
+    pub fn new(app: &AEToolsApp) -> Self {
+        // Create new window
+        glib::Object::builder().property("application", app).build()
+    }
+
+    fn setup_actions(&self) {
+        let show_toast = gio::ActionEntry::builder("show-toast")
+            .parameter_type(Some(&String::static_variant_type()))
+            .activate(move |win: &Self, _, param| {
+                let msg = param.map_or(String::new(), |m| {
+                    m.get::<String>().map_or(String::new(), |m| m)
+                });
+                win.imp().content.get().show_toast(&msg);
+            })
+            .build();
+
+        let sidebar_activated = gio::ActionEntry::builder("sidebar-activated")
+            .activate(move |win: &Self, _, _| {
+                win.imp().split_view.set_show_content(true);
+            })
+            .build();
+
+        self.add_action_entries([show_toast, sidebar_activated]);
+    }
+
+    fn setup_settings(&self) {
+        let settings = gio::Settings::new(*APP_ID);
+        self.imp()
+            .settings
+            .set(settings)
+            .expect("`settings` should not be set before calling `setup_settings`.");
+    }
+
+    fn settings(&self) -> &gio::Settings {
+        self.imp()
+            .settings
+            .get()
+            .expect("`settings` should be set in `setup_settings`.")
+    }
+
+    fn bind_settings(&self) {
+        let settings = self.settings();
+
+        settings.bind("window-width", self, "default-width").build();
+        settings
+            .bind("window-height", self, "default-height")
+            .build();
+        settings.bind("is-maximized", self, "maximized").build();
+    }
+
+    fn init_sidebar(&self) {
+        let sidebar = self.imp().sidebar.get().imp().sidebar.get();
+        let stack = self.imp().content.get().imp().stack.get();
+
+        sidebar.set_stack(Some(&stack));
+    }
+}

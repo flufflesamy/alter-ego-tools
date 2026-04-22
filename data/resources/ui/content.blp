@@ -1,0 +1,22 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $AETContent: Adw.NavigationPage {
+  title: _("Content");
+  vexpand: true;
+  hexpand: true;
+
+  child: Adw.ToastOverlay toast_overlay {
+    child: Adw.ViewStack stack {
+      notify::visible-child => $on_visible_child_notify(template);
+
+      Adw.ViewStackPage {
+        name: "description";
+        title: _("Description Formatter");
+
+        child: $AETContentDescription description {};
+      }
+    };
+  };
+}
+

@@ -1,0 +1,107 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $AETContentDescription: Adw.BreakpointBin {
+  vexpand: true;
+  hexpand: true;
+
+  child: Adw.ToastOverlay toast_overlay {
+    child: Adw.ToolbarView {
+      [top]
+      Adw.HeaderBar header_bar {}
+
+      [bottom]
+      ActionBar action_bar {
+        [start]
+        Button import_button {
+          clicked => $on_import_button_clicked(template);
+
+          child: Adw.ButtonContent {
+            label: _("Paste");
+            icon-name: "edit-paste-symbolic";
+          };
+        }
+
+        [start]
+        Button generate_button {
+          clicked => $on_generate_button_clicked(template);
+
+          child: Adw.ButtonContent {
+            label: _("Generate");
+            icon-name: "arrow-into-box-symbolic";
+          };
+        }
+
+        [end]
+        Button copy_button {
+          clicked => $on_copy_button_clicked(template);
+
+          child: Adw.ButtonContent {
+            label: _("Copy");
+            icon-name: "edit-copy-symbolic";
+          };
+        }
+      }
+
+      content: Box {
+        orientation: horizontal;
+        spacing: 12;
+        margin-top: 12;
+        margin-start: 12;
+        margin-end: 12;
+
+        Box {
+          orientation: vertical;
+          vexpand: true;
+          hexpand: true;
+          spacing: 10;
+
+          Label {
+            styles [
+              "description",
+            ]
+
+            label: _("Input");
+          }
+
+          ScrolledWindow {
+            vexpand: true;
+            hscrollbar-policy: never;
+
+            TextView input_text {
+              monospace: true;
+              wrap-mode: word;
+            }
+          }
+        }
+
+        Box {
+          orientation: vertical;
+          vexpand: true;
+          hexpand: true;
+          spacing: 10;
+
+          Label {
+            styles [
+              "description",
+            ]
+
+            label: _("Output");
+          }
+
+          ScrolledWindow {
+            vexpand: true;
+            hscrollbar-policy: never;
+
+            TextView output_text {
+              editable: false;
+              monospace: true;
+              wrap-mode: word;
+            }
+          }
+        }
+      };
+    };
+  };
+}
+

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/me/amypoon/AlterEgoTools/">
+  <gresource prefix="/com/flufflesamy/AlterEgoTools/">
     <!-- see https://gtk-rs.org/gtk4-rs/git/docs/gtk4/struct.Application.html#automatic-resources -->
-    <file compressed="true" preprocess="xml-stripblanks" alias="gtk/help-overlay.ui">ui/shortcuts.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="shortcuts-dialog.ui">ui/shortcuts.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/sidebar.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/description.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/content.ui</file>
     <file compressed="true">style.css</file>
+    <file preprocess="xml-stripblanks">icons/arrow-into-box-symbolic.svg</file>
   </gresource>
 </gresources>
+

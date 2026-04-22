@@ -1,12 +1,12 @@
 use gettextrs::gettext;
 use tracing::{debug, info};
 
-use gtk::prelude::*;
-use gtk::subclass::prelude::*;
+use adw::prelude::*;
+use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
-use crate::window::ExampleApplicationWindow;
+use crate::ui::window::AETApplicationWindow;
 
 mod imp {
     use super::*;
@@ -14,22 +14,22 @@ mod imp {
     use std::cell::OnceCell;
 
     #[derive(Debug, Default)]
-    pub struct ExampleApplication {
-        pub window: OnceCell<WeakRef<ExampleApplicationWindow>>,
+    pub struct AEToolsApp {
+        pub window: OnceCell<WeakRef<AETApplicationWindow>>,
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for ExampleApplication {
-        const NAME: &'static str = "ExampleApplication";
-        type Type = super::ExampleApplication;
-        type ParentType = gtk::Application;
+    impl ObjectSubclass for AEToolsApp {
+        const NAME: &'static str = "AEToolsApp";
+        type Type = super::AEToolsApp;
+        type ParentType = adw::Application;
     }
 
-    impl ObjectImpl for ExampleApplication {}
+    impl ObjectImpl for AEToolsApp {}
 
-    impl ApplicationImpl for ExampleApplication {
+    impl ApplicationImpl for AEToolsApp {
         fn activate(&self) {
-            debug!("GtkApplication<ExampleApplication>::activate");
+            debug!("AdwApplication<AEToolsApp>::activate");
             self.parent_activate();
             let app = self.obj();
 
@@ -39,7 +39,7 @@ mod imp {
                 return;
             }
 
-            let window = ExampleApplicationWindow::new(&app);
+            let window = AETApplicationWindow::new(&app);
             self.window
                 .set(window.downgrade())
                 .expect("Window already set.");
@@ -48,7 +48,7 @@ mod imp {
         }
 
         fn startup(&self) {
-            debug!("GtkApplication<ExampleApplication>::startup");
+            debug!("AdwApplication<AEToolsApp>::startup");
             self.parent_startup();
             let app = self.obj();
 
@@ -61,17 +61,18 @@ mod imp {
         }
     }
 
-    impl GtkApplicationImpl for ExampleApplication {}
+    impl GtkApplicationImpl for AEToolsApp {}
+    impl AdwApplicationImpl for AEToolsApp {}
 }
 
 glib::wrapper! {
-    pub struct ExampleApplication(ObjectSubclass<imp::ExampleApplication>)
-        @extends gio::Application, gtk::Application,
+    pub struct AEToolsApp(ObjectSubclass<imp::AEToolsApp>)
+        @extends gio::Application, gtk::Application, adw::Application,
         @implements gio::ActionMap, gio::ActionGroup;
 }
 
-impl ExampleApplication {
-    fn main_window(&self) -> ExampleApplicationWindow {
+impl AEToolsApp {
+    fn main_window(&self) -> AETApplicationWindow {
         self.imp().window.get().unwrap().upgrade().unwrap()
     }
 
@@ -102,7 +103,7 @@ impl ExampleApplication {
 
     fn setup_css(&self) {
         let provider = gtk::CssProvider::new();
-        provider.load_from_resource("/me/amypoon/AlterEgoTools/style.css");
+        provider.load_from_resource("/com/flufflesamy/AlterEgoTools/style.css");
         if let Some(display) = gdk::Display::default() {
             gtk::style_context_add_provider_for_display(
                 &display,
@@ -118,21 +119,20 @@ impl ExampleApplication {
     }
 
     fn show_about_dialog(&self) {
-        let dialog = gtk::AboutDialog::builder()
-            .logo_icon_name(*APP_ID)
-            // FIXME Insert your license of choice here
-            // .license_type(gtk::License::MitX11)
-            // FIXME Insert your website here
-            // .website("https://gitlab.gnome.org/bilelmoussaoui/alter-ego-tools/")
+        let window = self.active_window().unwrap();
+        let dialog = adw::AboutDialog::builder()
+            .application_name("Alter Ego Tools")
+            .application_icon("com.flufflesamy.AlterEgoTools")
+            .license_type(gtk::License::Gpl30)
+            .website("https://github.com/flufflesamy/alter-ego-tools/")
             .version(*VERSION)
-            .transient_for(&self.main_window())
             .translator_credits(gettext("translator-credits"))
-            .modal(true)
-            .authors(Self::authors())
-            .artists(vec!["Amy Poon"])
+            .developers(Self::authors())
+            .developer_name("Amy Poon")
+            .copyright("© 2026 Amy Poon")
             .build();
 
-        dialog.present();
+        dialog.present(Some(&window));
     }
 
     pub fn run(&self) -> glib::ExitCode {
@@ -144,11 +144,11 @@ impl ExampleApplication {
     }
 }
 
-impl Default for ExampleApplication {
+impl Default for AEToolsApp {
     fn default() -> Self {
         glib::Object::builder()
             .property("application-id", *APP_ID)
-            .property("resource-base-path", "/me/amypoon/AlterEgoTools/")
+            .property("resource-base-path", "/com/flufflesamy/AlterEgoTools/")
             .build()
     }
 }

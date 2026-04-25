@@ -1,5 +1,5 @@
 {
-    "id": "com.flufflesamy.AlterEgoTools.Devel",
+    "id": "com.flufflesamy.AlterEgoTools",
     "runtime": "org.gnome.Platform",
     "runtime-version": "50",
     "sdk": "org.gnome.Sdk",
@@ -12,7 +12,7 @@
         "--socket=fallback-x11",
         "--socket=wayland",
         "--device=dri",
-        "--env=RUST_LOG=alter_ego_tools=release",
+        "--env=RUST_LOG=alter_ego_tools=info",
         "--env=G_MESSAGES_DEBUG=none",
         "--env=RUST_BACKTRACE=1"
     ],
@@ -35,6 +35,7 @@
             "buildsystem": "meson",
             "run-tests": true,
             "config-opts": [
+                "-Dprofile=default"
             ],
             "sources": [
                 {

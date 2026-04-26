@@ -62,7 +62,8 @@ mod imp {
                     output_buffer.set_text(&res);
                     self.show_toast("Generated description.");
                 }
-                Err(_) => {
+                Err(e) => {
+                    error!("Cannot generate description: {e}.");
                     self.show_toast("Error: Cannot generate description.");
                 }
             }
@@ -142,3 +143,4 @@ glib::wrapper! {
 }
 
 impl Description {}
+

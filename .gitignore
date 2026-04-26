@@ -12,3 +12,5 @@
 /subprojects/blueprint-compiler
 .buildconfig
 *.syscap
+/uninstall/
+/.idea/

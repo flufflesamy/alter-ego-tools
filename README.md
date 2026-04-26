@@ -20,4 +20,3 @@ Turns plain text into Alter Ego XML descriptions.
 To build the development version of Alter Ego Tools and hack on the code
 see the [general guide](https://developer.gnome.org/documentation/tutorials/beginners/getting_started.html)
 for building GNOME apps with Flatpak and GNOME Builder.
-

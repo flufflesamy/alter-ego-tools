@@ -143,4 +143,3 @@ glib::wrapper! {
 }
 
 impl Description {}
-

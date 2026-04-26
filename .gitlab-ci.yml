@@ -18,7 +18,7 @@ variables:
   RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
 
 flatpak:
-  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-48'
+  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-50'
   extends: ".flatpak@x86_64"
 
 # Configure and run rustfmt
@@ -33,7 +33,7 @@ rustfmt:
     - cargo fmt --all -- --color=always --check
 
 .flatpak-command: &flatpak-command
-  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-48'
+  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-50'
   tags:
     - flatpak
   script:

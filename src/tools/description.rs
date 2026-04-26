@@ -82,4 +82,3 @@ Thank you!";
         assert_eq!(expected, result.unwrap().as_str());
     }
 }
-

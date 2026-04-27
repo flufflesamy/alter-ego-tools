@@ -92,7 +92,7 @@ impl Procedural {
 
     /// Generates Alter Ego possible names string.
     ///
-    /// ASDF.
+    /// Procedural must have a name and at least one possibility must be named, or function returns error.
     ///
     /// # Examples
     pub fn generate_possible_names(&self, flag: PossibleFlag) -> Result<String> {
@@ -112,7 +112,7 @@ impl Procedural {
 
     /// Generates Alter Ego possible containing phrases string.
     ///
-    /// ASDF.
+    /// Procedural must have a name and at least one possibility must be named, or function returns error.
     ///
     /// # Examples
     pub fn generate_possible_containing_phrases(
@@ -404,5 +404,57 @@ mod tests {
         let expected = String::from(
             r#"<procedural name="beverage flavor" chance="100" stat="spd"><poss name="water" chance="66.6">water</poss><poss name="crush">crush</poss><poss name="sierra mist">sierra mist</poss><poss name="root beer">root beer</poss></procedural>"#,
         );
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_possible_names() {
+        let mut builder = Procedural::builder();
+        builder.name("beverage flavor");
+        builder.possibility(Some("water"), Some(66.6));
+        builder.possibility(Some("crush"), None);
+        builder.possibility(Some("sierra mist"), None);
+        builder.possibility(Some("root beer"), None);
+        let uppercase_result = builder
+            .build()
+            .unwrap()
+            .generate_possible_names(PossibleFlag::Uppercase)
+            .unwrap();
+        let lowercase_result = builder
+            .build()
+            .unwrap()
+            .generate_possible_names(PossibleFlag::Lowercase)
+            .unwrap();
+        let uppercase_expected = "[beverage flavor=water: WATER], [beverage flavor=crush: CRUSH], [beverage flavor=sierra mist: SIERRA MIST], [beverage flavor=root beer: ROOT BEER]";
+        let lowercase_expected = "[beverage flavor=water: water], [beverage flavor=crush: crush], [beverage flavor=sierra mist: sierra mist], [beverage flavor=root beer: root beer]";
+
+        assert_eq!(uppercase_result, uppercase_expected);
+        assert_eq!(lowercase_result, lowercase_expected);
+    }
+
+    #[test]
+    fn test_possible_containing_phrases() {
+        let mut builder = Procedural::builder();
+        builder.name("beverage flavor");
+        builder.possibility(Some("water"), Some(66.6));
+        builder.possibility(Some("crush"), None);
+        builder.possibility(Some("sierra mist"), None);
+        builder.possibility(Some("root beer"), None);
+        let pattern = "a bottle of {}, bottles of {}";
+        let uppercase_result = builder
+            .build()
+            .unwrap()
+            .generate_possible_containing_phrases(pattern, PossibleFlag::Uppercase)
+            .unwrap();
+        let lowercase_result = builder
+            .build()
+            .unwrap()
+            .generate_possible_containing_phrases(pattern, PossibleFlag::Lowercase)
+            .unwrap();
+        let uppercase_expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER], [beverage flavor=crush: a bottle of CRUSH, bottles of CRUSH], [beverage flavor=sierra mist: a bottle of SIERRA MIST, bottles of SIERRA MIST], [beverage flavor=root beer: a bottle of ROOT BEER, bottles of ROOT BEER]";
+        let lowercase_expected = "[beverage flavor=water: a bottle of water, bottles of water], [beverage flavor=crush: a bottle of crush, bottles of crush], [beverage flavor=sierra mist: a bottle of sierra mist, bottles of sierra mist], [beverage flavor=root beer: a bottle of root beer, bottles of root beer]";
+
+        assert_eq!(uppercase_result, uppercase_expected);
+        assert_eq!(lowercase_result, lowercase_expected);
     }
 }

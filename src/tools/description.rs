@@ -10,7 +10,6 @@ pub fn str_to_description(input: &str) -> anyhow::Result<String> {
     let mut output: Vec<String> = vec!["<desc>".to_owned()];
 
     // Split into sentences with <s> tags
-    // let re = Regex::new(r".*?[!.?]\s*")?;
     let re = Regex::new(r"[\n\r]|```(?:\w+\n)?[\s\S]*?```|.*?[!.?][ \t]*|.*?\z")?;
     output.push(
         re.find_iter(input)

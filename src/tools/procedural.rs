@@ -9,7 +9,7 @@ pub enum Stat {
     Stamina,
 }
 
-impl Stat {
+impl ToString for Stat {
     /// Converts the given Stat to a short string.
     ///
     /// # Examples
@@ -19,7 +19,7 @@ impl Stat {
     ///
     /// assert_eq!(per, stat_string);
     /// ```
-    pub fn to_string(&self) -> String {
+    fn to_string(&self) -> String {
         match self {
             Stat::Strength => "str".into(),
             Stat::Perception => "per".into(),
@@ -28,6 +28,12 @@ impl Stat {
             Stat::Stamina => "sta".into(),
         }
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum PossibleFlag {
+    Uppercase,
+    Lowercase,
 }
 
 pub type Possibility = (Option<String>, Option<f64>);
@@ -73,7 +79,7 @@ impl Procedural {
     ///
     /// assert_eq!(proc_string, generated);
     /// ```
-    pub fn generate(&self) -> String {
+    pub fn generate_procedural(&self) -> String {
         let mut parts: Vec<String> = Vec::new();
         // Push <procedural...>
         parts.push(self.generate_proc_tag());
@@ -84,22 +90,53 @@ impl Procedural {
         parts.join("")
     }
 
+    /// Generates Alter Ego possible names string.
+    ///
+    /// ASDF.
+    ///
+    /// # Examples
+    pub fn generate_possible_names(&self, flag: PossibleFlag) -> Result<String> {
+        // If procedural doesn't have name, bail
+        let name = self.get_some_name()?;
+
+        // Turn possibilities into tags
+        let possibilities_tags: Vec<String> = self
+            .get_named_possibilities()?
+            .into_iter()
+            .map(|p| self.to_possible_name_tag(name, &p, flag))
+            .collect();
+
+        // Join tags into string
+        Ok(self.join_tags(possibilities_tags))
+    }
+
+    /// Generates Alter Ego possible containing phrases string.
+    ///
+    /// ASDF.
+    ///
+    /// # Examples
+    pub fn generate_possible_containing_phrases(
+        &self,
+        pattern: &str,
+        flag: PossibleFlag,
+    ) -> Result<String> {
+        let name = self.get_some_name()?;
+
+        let possibilities_tags: Vec<String> = self
+            .get_named_possibilities()?
+            .into_iter()
+            .map(|p| self.to_possible_phrase_tag(name, &p, pattern, flag))
+            .collect();
+        Ok(self.join_tags(possibilities_tags))
+    }
+
     fn generate_proc_tag(&self) -> String {
         // Format 'some_name' => 'name="some_name"' if set
-        let name_string = match &self.name {
-            Some(n) => self.to_attribute("name", n),
-            None => String::new(),
-        };
+        let name_string = self.to_attribute("name", &self.name);
         // Format '56' to 'chance="56"'
-        let chance_string = match &self.chance {
-            Some(c) => self.to_attribute("chance", &c.to_string()),
-            None => String::new(),
-        };
+        let chance_string = self.to_attribute("chance", &self.chance);
         // Format 'spd' to 'stat="spd"'
-        let stat_string = match &self.stat {
-            Some(s) => self.to_attribute("stat", &s.to_string()),
-            None => String::new(),
-        };
+        let stat_string = self.to_attribute("stat", &self.stat);
 
         self.to_attribute_tag("procedural", vec![name_string, chance_string, stat_string])
     }
@@ -108,14 +145,8 @@ impl Procedural {
         let mut poss_string: Vec<String> = Vec::new();
         for (name, chance) in self.possibilities() {
             let mut tag: Vec<String> = Vec::new();
-            let name_string = match &name {
-                Some(n) => self.to_attribute("name", n),
-                None => String::new(),
-            };
-            let chance_string = match &chance {
-                Some(c) => self.to_attribute("chance", &c.to_string()),
-                None => String::new(),
-            };
+            let name_string = self.to_attribute("name", name);
+            let chance_string = self.to_attribute("chance", chance);
 
             // Push opening tag
             tag.push(self.to_attribute_tag("poss", vec![name_string, chance_string]));
@@ -135,8 +166,14 @@ impl Procedural {
         poss_string.join("")
     }
 
-    fn to_attribute(&self, attr_name: &str, attribute: &str) -> String {
-        format!("{attr_name}=\"{attribute}\"")
+    fn to_attribute<T: ToString>(&self, attr_name: &str, attribute: &Option<T>) -> String {
+        match attribute {
+            Some(a) => {
+                let attr = a.to_string();
+                format!("{attr_name}=\"{attr}\"")
+            }
+            None => String::new(),
+        }
     }
 
     fn to_attribute_tag(&self, tag_name: &str, attributes: Vec<String>) -> String {
@@ -153,6 +190,70 @@ impl Procedural {
         tag.push(">".into());
 
         tag.join("")
+    }
+
+    fn to_possible_phrase_tag(
+        &self,
+        tag_name: &str,
+        attribute: &str,
+        pattern: &str,
+        flag: PossibleFlag,
+    ) -> String {
+        let transformed = self.transform_possible_attribute(attribute, flag);
+        let replaced_phrase = pattern.replace("{}", &transformed);
+        format!("[{tag_name}={attribute}: {replaced_phrase}]")
+    }
+
+    fn to_possible_name_tag(&self, tag_name: &str, attribute: &str, flag: PossibleFlag) -> String {
+        let transformed = self.transform_possible_attribute(attribute, flag);
+        format!("[{tag_name}={attribute}: {transformed}]")
+    }
+
+    fn transform_possible_attribute(&self, attribute: &str, flag: PossibleFlag) -> String {
+        match flag {
+            PossibleFlag::Uppercase => attribute.to_uppercase(),
+            PossibleFlag::Lowercase => attribute.to_lowercase(),
+        }
+    }
+
+    fn join_tags(&self, tags: Vec<String>) -> String {
+        let len = tags.len();
+        tags.iter()
+            .enumerate()
+            .map(|(i, s)| {
+                // If tag is not last tag
+                if i != len - 1 {
+                    // Add comma
+                    s.to_owned() + ", "
+                } else {
+                    // Leave last tag as is
+                    s.to_owned()
+                }
+            })
+            .collect::<String>()
+    }
+
+    fn get_named_possibilities(&self) -> Result<Vec<String>> {
+        // filter into where name is present and discard chance
+        let some: Vec<String> = self
+            .possibilities
+            .clone()
+            .into_iter()
+            .filter_map(|(name, _)| name)
+            .collect();
+        // If no possibilities are named, bail
+        if some.is_empty() {
+            bail!("At least one possibility must be named.")
+        }
+        Ok(some)
+    }
+
+    fn get_some_name(&self) -> Result<&str> {
+        if let Some(name) = &self.name {
+            Ok(name)
+        } else {
+            bail!("Procedural must be named.")
+        }
     }
 }
 
@@ -186,18 +287,23 @@ impl ProceduralBuilder {
 
     pub fn possibility(
         &mut self,
-        name: Option<String>,
+        name: Option<&str>,
         chance: Option<f64>,
     ) -> &mut ProceduralBuilder {
-        self.possibilities.push((name, chance));
+        self.possibilities
+            .push((name.map(|n| n.to_owned()), chance));
         self
     }
 
     pub fn possibilities(
         &mut self,
-        possibilities: Vec<(Option<String>, Option<f64>)>,
+        possibilities: Vec<(Option<&str>, Option<f64>)>,
     ) -> &mut ProceduralBuilder {
-        self.possibilities.extend(possibilities);
+        self.possibilities.extend(
+            possibilities
+                .iter()
+                .map(|(name, chance)| (name.map(|n| n.to_owned()), chance.to_owned())),
+        );
         self
     }
 
@@ -242,7 +348,7 @@ mod tests {
         let mut builder = ProceduralBuilder::new();
         builder.name("Test");
         builder.chance(64.0);
-        builder.possibility(Some("Test".into()), Some(34.0));
+        builder.possibility(Some("Test"), Some(34.0));
         builder.stat(Stat::Dexterity);
         let result = builder.build();
         let expected = Procedural {
@@ -268,10 +374,35 @@ mod tests {
         let possibilities = Procedural::builder()
             .possibilities(vec![
                 (None, Some(145.0)),
-                (Some("Test".into()), Some(0.0)),
+                (Some("Test"), Some(0.0)),
                 (None, None),
             ])
             .build();
         assert!(possibilities.is_err());
+    }
+
+    #[test]
+    fn test_empty_procedural_generate() {
+        let proc = Procedural::builder().build();
+        let expected = String::from("<procedural></procedural>");
+        let output = proc.unwrap().generate_procedural();
+
+        assert_eq!(output, expected);
+    }
+
+    #[test]
+    fn test_procedural_generate() {
+        let mut builder = Procedural::builder();
+        builder.name("beverage flavor");
+        builder.chance(100.0);
+        builder.stat(Stat::Speed);
+        builder.possibility(Some("water"), Some(66.6));
+        builder.possibility(Some("crush"), None);
+        builder.possibility(Some("sierra mist"), None);
+        builder.possibility(Some("root beer"), None);
+        let result = builder.build().unwrap().generate_procedural();
+        let expected = String::from(
+            r#"<procedural name="beverage flavor" chance="100" stat="spd"><poss name="water" chance="66.6">water</poss><poss name="crush">crush</poss><poss name="sierra mist">sierra mist</poss><poss name="root beer">root beer</poss></procedural>"#,
+        );
     }
 }

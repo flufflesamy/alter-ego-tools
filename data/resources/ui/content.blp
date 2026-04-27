@@ -16,6 +16,13 @@ template $AETContent: Adw.NavigationPage {
 
         child: $AETContentDescription description {};
       }
+
+      Adw.ViewStackPage {
+        name: "procedural";
+        title: _("Procedural Generator");
+
+        child: $AETContentProcedural procedural {};
+      }
     };
   };
 }

@@ -5,6 +5,7 @@ use gtk::glib;
 use tracing::warn;
 
 use crate::ui::description::Description;
+use crate::ui::procedural::ContentProcedural;
 
 // #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 // pub enum ContentPage {
@@ -37,6 +38,8 @@ mod imp {
         pub stack: TemplateChild<ViewStack>,
         #[template_child]
         description: TemplateChild<Description>,
+        #[template_child]
+        procedural: TemplateChild<ContentProcedural>,
         #[template_child]
         toast_overlay: TemplateChild<ToastOverlay>,
     }

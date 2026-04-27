@@ -32,6 +32,7 @@ impl ToString for Stat {
 
 #[derive(Debug, Clone, Copy)]
 pub enum PossibleFlag {
+    None,
     Uppercase,
     Lowercase,
 }
@@ -47,6 +48,7 @@ pub struct Procedural {
 }
 
 impl Procedural {
+    /// Returns builder for creating Procedural.
     pub fn builder() -> ProceduralBuilder {
         ProceduralBuilder::default()
     }
@@ -72,14 +74,17 @@ impl Procedural {
     /// Uses the fields of the Procedural struct to generate a string.
     ///
     /// # Examples
+    ///
     /// ```rs
+    /// // Build procedural with builder
     /// let procedural = ProceduralBuilder::new().build();
-    /// let generated = procedural.generate();
+    /// // Generate string from procedural
+    /// let generated = procedural.generate_procedural_string();
     /// let proc_string = String::from("<procedural></procedural>");
     ///
     /// assert_eq!(proc_string, generated);
     /// ```
-    pub fn generate_procedural(&self) -> String {
+    pub fn generate_procedural_string(&self) -> String {
         let mut parts: Vec<String> = Vec::new();
         // Push <procedural...>
         parts.push(self.generate_proc_tag());
@@ -92,9 +97,24 @@ impl Procedural {
 
     /// Generates Alter Ego possible names string.
     ///
+    /// Can supply a `PossibleFlag` enum to transform name.
     /// Procedural must have a name and at least one possibility must be named, or function returns error.
     ///
     /// # Examples
+    ///
+    /// ```rs
+    /// // Build procedural with builder
+    /// let procedural = ProceduralBuilder::new()
+    ///     // Must have name
+    ///     .name("beverage flavor")
+    ///     // Must have at least one named possibility
+    ///     .possibility(Some("water"), None)
+    ///     .build();
+    /// let names = procedural.generate_possible_names(PossibleFlag::Uppercase);
+    /// let expected = "[beverage flavor=water: WATER]";
+    ///
+    /// assert_eq!(names, expected);
+    /// ```
     pub fn generate_possible_names(&self, flag: PossibleFlag) -> Result<String> {
         // If procedural doesn't have name, bail
         let name = self.get_some_name()?;
@@ -112,9 +132,28 @@ impl Procedural {
 
     /// Generates Alter Ego possible containing phrases string.
     ///
+    /// Can supply a `PossibleFlag` enum to transform name. If no transformation needed, supply `PossibleFlag::None`.
     /// Procedural must have a name and at least one possibility must be named, or function returns error.
     ///
+    /// A pattern string where `{}` denotes the placeholder for the containing phrase must be provided.
+    ///
     /// # Examples
+    ///
+    /// ```rs
+    /// // Build procedural with builder
+    /// let procedural = ProceduralBuilder::new()
+    ///     // Must have name
+    ///     .name("beverage flavor")
+    ///     // Must have at least one named possibility
+    ///     .possibility(Some("water"), None)
+    ///     .build();
+    /// // {} denotes placeholders
+    /// let pattern = "a bottle of {}, bottles of {}";
+    /// let names = procedural.generate_possible_containing_phrases(pattern, PossibleFlag::Uppercase);
+    /// let expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER]";
+    ///
+    /// assert_eq!(names, expected);
+    /// ```
     pub fn generate_possible_containing_phrases(
         &self,
         pattern: &str,
@@ -211,6 +250,7 @@ impl Procedural {
 
     fn transform_possible_attribute(&self, attribute: &str, flag: PossibleFlag) -> String {
         match flag {
+            PossibleFlag::None => attribute.to_owned(),
             PossibleFlag::Uppercase => attribute.to_uppercase(),
             PossibleFlag::Lowercase => attribute.to_lowercase(),
         }
@@ -266,6 +306,7 @@ pub struct ProceduralBuilder {
 }
 
 impl ProceduralBuilder {
+    /// Creates new ProceduralBuilder.
     pub fn new() -> ProceduralBuilder {
         ProceduralBuilder::default()
     }
@@ -307,6 +348,17 @@ impl ProceduralBuilder {
         self
     }
 
+    /// Builds Procedural from ProceduralBuilder using the builder pattern.
+    ///
+    /// Returns Error if chances supplied in `self.chance` or `self.possibilities` are above 100 or below 0.
+    ///
+    /// # Examples
+    ///
+    /// ```rs
+    /// let mut builder = ProceduralBuilder::new();
+    /// builder.name("some_name");
+    /// let procedural = builder.build();
+    /// ```
     pub fn build(&self) -> Result<Procedural> {
         if let Some(c) = self.chance {
             if !self.validate_chance(&c) {
@@ -385,7 +437,7 @@ mod tests {
     fn test_empty_procedural_generate() {
         let proc = Procedural::builder().build();
         let expected = String::from("<procedural></procedural>");
-        let output = proc.unwrap().generate_procedural();
+        let output = proc.unwrap().generate_procedural_string();
 
         assert_eq!(output, expected);
     }
@@ -400,7 +452,7 @@ mod tests {
         builder.possibility(Some("crush"), None);
         builder.possibility(Some("sierra mist"), None);
         builder.possibility(Some("root beer"), None);
-        let result = builder.build().unwrap().generate_procedural();
+        let result = builder.build().unwrap().generate_procedural_string();
         let expected = String::from(
             r#"<procedural name="beverage flavor" chance="100" stat="spd"><poss name="water" chance="66.6">water</poss><poss name="crush">crush</poss><poss name="sierra mist">sierra mist</poss><poss name="root beer">root beer</poss></procedural>"#,
         );

@@ -1,0 +1,14 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $AETContentProcedural: Adw.BreakpointBin {
+  vexpand: true;
+  hexpand: true;
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
+
+    content: Box {};
+  };
+}

@@ -7,8 +7,8 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/sidebar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/description.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/content.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/procedural.ui</file>
     <file compressed="true">style.css</file>
     <file preprocess="xml-stripblanks">icons/arrow-into-box-symbolic.svg</file>
   </gresource>
 </gresources>
-

@@ -12,8 +12,6 @@ mod imp {
     #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/description.ui")]
     pub struct AETContentDescription {
         #[template_child]
-        pub(super) toast_overlay: TemplateChild<adw::ToastOverlay>,
-        #[template_child]
         pub(super) input_text: TemplateChild<gtk::TextView>,
         #[template_child]
         pub(super) output_text: TemplateChild<gtk::TextView>,

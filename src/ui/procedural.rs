@@ -5,11 +5,25 @@ use gtk::{gdk, gio, glib};
 use crate::tools::procedural::*;
 
 mod imp {
+    use adw::{EntryRow, ExpanderRow, PreferencesPage, SpinRow};
+    use gtk::Button;
+
     use super::*;
 
     #[derive(Default, Debug, gtk::CompositeTemplate)]
     #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/procedural.ui")]
-    pub struct AETContentProcedural {}
+    pub struct AETContentProcedural {
+        #[template_child]
+        proc_page: TemplateChild<PreferencesPage>,
+        #[template_child]
+        proc_poss_add_btn: TemplateChild<Button>,
+        #[template_child]
+        proc_name: TemplateChild<EntryRow>,
+        #[template_child]
+        proc_chance: TemplateChild<SpinRow>,
+        #[template_child]
+        proc_stat: TemplateChild<ExpanderRow>,
+    }
 
     #[glib::object_subclass]
     impl ObjectSubclass for AETContentProcedural {
@@ -19,7 +33,7 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
-            // klass.bind_template_callbacks();
+            klass.bind_template_callbacks();
         }
 
         fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -33,7 +47,11 @@ mod imp {
 
     impl BreakpointBinImpl for AETContentProcedural {}
 
-    impl AETContentProcedural {}
+    #[gtk::template_callbacks]
+    impl AETContentProcedural {
+        #[template_callback]
+        fn on_pos_add_btn_clicked(&self) {}
+    }
 }
 
 glib::wrapper! {

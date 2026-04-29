@@ -2,6 +2,7 @@ mod application;
 mod config;
 mod tools;
 mod ui;
+mod utils;
 
 use gettextrs::{LocaleCategory, gettext};
 use gtk::{gio, glib};

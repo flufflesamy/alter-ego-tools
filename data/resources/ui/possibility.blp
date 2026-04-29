@@ -1,0 +1,40 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $AETProceduralPossibility: Adw.PreferencesGroup {
+  title: _("Possibility");
+  description: _("A possible value for the parent procedural");
+
+  header-suffix: Button pos_remove_btn {
+    clicked => $on_pos_remove_btn_clicked(template);
+
+    Adw.ButtonContent {
+      label: _("Remove");
+      icon-name: "minus-symbolic";
+    }
+  };
+
+  Adw.PreferencesRow {
+    Adw.EntryRow pos_name {
+      title: _("Possibility Name");
+    }
+  }
+
+  Adw.PreferencesRow {
+    Adw.SpinRow pos_chance {
+      title: _("Chance");
+      subtitle: _("Percentage chance");
+      numeric: true;
+      digits: 2;
+      climb-rate: 1;
+
+      adjustment: Adjustment {
+        lower: 0;
+        upper: 100;
+        value: 100;
+        page-increment: 10;
+        step-increment: 0.5;
+      };
+    }
+  }
+}

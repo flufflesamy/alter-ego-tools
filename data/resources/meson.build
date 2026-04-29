@@ -1,15 +1,23 @@
 # Blueprint
-blueprints = custom_target('blueprints',
+blueprints = custom_target(
+  'blueprints',
   input: files(
-    'ui/window.blp',
+    'ui/content.blp',
+    'ui/description.blp',
+    'ui/possibility.blp',
+    'ui/procedural.blp',
     'ui/shortcuts.blp',
     'ui/sidebar.blp',
-    'ui/description.blp',
-    'ui/content.blp',
-    'ui/procedural.blp',
+    'ui/window.blp',
   ),
   output: '.',
-  command: [find_program('blueprint-compiler'), 'batch-compile', '--minify', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
+  command: [
+    find_program('blueprint-compiler'),
+    'batch-compile',
+    '--minify', '@OUTPUT@',
+    '@CURRENT_SOURCE_DIR@',
+    '@INPUT@',
+  ],
 )
 
 # Resources

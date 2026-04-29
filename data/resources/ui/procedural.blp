@@ -9,6 +9,65 @@ template $AETContentProcedural: Adw.BreakpointBin {
     [top]
     Adw.HeaderBar {}
 
-    content: Box {};
+    Paned {
+      margin-top: 12;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+
+      start-child: Frame {
+        Adw.PreferencesPage proc_page {
+          title: _("Procedural Generator Input");
+          description: _("To generate a procedural, TODO");
+
+          Adw.PreferencesGroup proc_group {
+            title: _("Procedural");
+            description: _("asdf");
+
+            header-suffix: Button proc_poss_add_btn {
+              label: _("Add Possibility");
+              clicked => $on_pos_add_btn_clicked(template);
+
+              child: Adw.ButtonContent {
+                label: _("Add Possibility");
+                icon-name: "plus-symbolic";
+              };
+            };
+
+            Adw.EntryRow proc_name {
+              title: _("Procedural Name");
+            }
+
+            Adw.SpinRow proc_chance {
+              title: _("Chance");
+              subtitle: _("Percentage chance for procedural");
+              numeric: true;
+              digits: 2;
+              climb-rate: 1;
+
+              adjustment: Adjustment {
+                lower: 0;
+                upper: 100;
+                value: 100;
+                page-increment: 10;
+                step-increment: 0.5;
+              };
+            }
+
+            Adw.ExpanderRow proc_stat {
+              title: _("Stat");
+              subtitle: _("Player stat for procedural");
+            }
+          }
+
+          Adw.PreferencesGroup poss_group {
+            title: _("Possibilities");
+            description: _("Enter them here.");
+          }
+        }
+      };
+
+      end-child: Frame {};
+    }
   };
 }

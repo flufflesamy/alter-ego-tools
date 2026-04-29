@@ -22,15 +22,20 @@ template $AETContentProcedural: Adw.BreakpointBin {
 
           Adw.PreferencesGroup proc_group {
             title: _("Procedural");
-            description: _("asdf");
+            description: _("An Alter Ego Procedural");
 
-            header-suffix: Button proc_poss_add_btn {
-              label: _("Add Possibility");
-              clicked => $on_pos_add_btn_clicked(template);
+            header-suffix: Button proc_clear_btn {
+              styles [
+                "destructive-action",
+              ]
+
+              label: _("Clear Procedural");
+              has-frame: false;
+              clicked => $on_proc_clear_btn_clicked(template);
 
               child: Adw.ButtonContent {
-                label: _("Add Possibility");
-                icon-name: "plus-symbolic";
+                label: _("Clear Procedural");
+                icon-name: "user-trash-symbolic";
               };
             };
 
@@ -40,7 +45,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
 
             Adw.SpinRow proc_chance {
               title: _("Chance");
-              subtitle: _("Percentage chance for procedural");
+              subtitle: _("Percentage 0-100%");
               numeric: true;
               digits: 2;
               climb-rate: 1;
@@ -56,13 +61,49 @@ template $AETContentProcedural: Adw.BreakpointBin {
 
             Adw.ExpanderRow proc_stat {
               title: _("Stat");
-              subtitle: _("Player stat for procedural");
+              subtitle: _("Player Stat");
             }
           }
 
           Adw.PreferencesGroup poss_group {
             title: _("Possibilities");
-            description: _("Enter them here.");
+            description: _("A Procedural can have multiple possibilities");
+
+            header-suffix: Button proc_poss_add_btn {
+              label: _("Add Possibility");
+              has-frame: false;
+              clicked => $on_poss_add_btn_clicked(template);
+
+              child: Adw.ButtonContent {
+                label: _("Add Possibility");
+                icon-name: "plus-symbolic";
+              };
+            };
+
+            ListBox poss_list_box {
+              styles [
+                "boxed-list-separate",
+              ]
+
+              selection-mode: none;
+            }
+          }
+        }
+
+        Adw.PreferencesGroup action_group {
+          Adw.ButtonRow poss_generate_btn {
+            title: _("Generate Procedural");
+            activated => $on_poss_generate_btn_activated(template);
+          }
+
+          Adw.ButtonRow names_generate_btn {
+            title: _("Generate Possible Names");
+            activated => $on_names_generate_btn_activated(template);
+          }
+
+          Adw.ButtonRow containing_phrases_generate_btn {
+            title: _("Generate Possible Containing Phrases");
+            activated => $on_containing_phrases_generate_btn_activated(template);
           }
         }
       };

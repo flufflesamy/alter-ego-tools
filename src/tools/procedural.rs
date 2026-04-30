@@ -11,6 +11,28 @@ pub enum Stat {
     Stamina,
 }
 
+impl Stat {
+    /// Returns the Stat enum corresponding to the given name.
+    ///
+    /// # Examples
+    /// ```rs
+    /// let stat = Stat::from_name("Perception");
+    /// let per = Some(Stat::Perception);
+    ///
+    /// assert_eq!(per, stat);
+    /// ```
+    pub fn from_name(name: &str) -> Option<Self> {
+        match name {
+            "Strength" => Some(Stat::Strength),
+            "Perception" => Some(Stat::Perception),
+            "Dexterity" => Some(Stat::Dexterity),
+            "Speed" => Some(Stat::Speed),
+            "Stamina" => Some(Stat::Stamina),
+            _ => None,
+        }
+    }
+}
+
 impl ToString for Stat {
     /// Converts the given Stat to a short string.
     ///
@@ -37,6 +59,16 @@ pub enum PossibleFlag {
     None,
     Uppercase,
     Lowercase,
+}
+
+impl From<&str> for PossibleFlag {
+    fn from(s: &str) -> Self {
+        match s {
+            "Uppercase" => PossibleFlag::Uppercase,
+            "Lowercase" => PossibleFlag::Lowercase,
+            _ => PossibleFlag::None,
+        }
+    }
 }
 
 pub type Possibility = (Option<String>, Option<f64>);

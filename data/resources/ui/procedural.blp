@@ -16,7 +16,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
       margin-end: 12;
 
       start-child: Frame {
-        Adw.PreferencesPage proc_page {
+        child: Adw.PreferencesPage proc_page {
           title: _("Procedural Generator Input");
           // TODO: Add a proper description
           description: _("To generate a procedural, TODO");
@@ -44,9 +44,20 @@ template $AETContentProcedural: Adw.BreakpointBin {
               title: _("Procedural Name");
             }
 
-            Adw.ExpanderRow proc_stat {
+            Adw.ComboRow proc_stat {
               title: _("Stat");
               subtitle: _("Player Stat");
+
+              model: StringList {
+                strings [
+                  _("None"),
+                  _("Strength"),
+                  _("Perception"),
+                  _("Dexterity"),
+                  _("Speed"),
+                  _("Stamina"),
+                ]
+              };
             }
 
             Adw.SwitchRow proc_chance_enabled {
@@ -100,12 +111,22 @@ template $AETContentProcedural: Adw.BreakpointBin {
             title: _("Generate Procedural");
             description: _("Generate procedurals here");
 
-            Adw.EntryRow possible_pattern {
+            Adw.EntryRow poss_pattern {
               title: _("Possible Pattern");
             }
 
-            Adw.ExpanderRow possible_mode {
-              title: _("Replacement Mode");
+            Adw.ComboRow poss_flag {
+              title: _("Replacement Flag");
+              // TODO: Write subtitle for what this does
+              subtitle: _("");
+
+              model: StringList {
+                strings [
+                  _("None"),
+                  _("Uppercase"),
+                  _("Lowercase"),
+                ]
+              };
             }
 
             Adw.ButtonRow poss_generate_btn {
@@ -123,7 +144,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
               activated => $on_containing_phrases_generate_btn_activated(template);
             }
           }
-        }
+        };
       };
 
       end-child: Frame {};

@@ -1,3 +1,5 @@
+pub mod macros;
+
 use anyhow::{Result, bail};
 use gtk::{
     gdk::{self, prelude::DisplayExt},

@@ -3,25 +3,26 @@ mod possibility_data;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use anyhow::Result;
+use adw::{ButtonRow, ComboRow, EntryRow, SpinRow, SwitchRow};
+use anyhow::{Result, bail};
 use gtk::gio::ListStore;
 use gtk::glib;
+use gtk::{
+    Button, ListBox, StringObject,
+    glib::{clone, closure_local},
+};
 use std::cell::RefCell;
 use tracing::error;
 
 use crate::tools::procedural::*;
 use crate::ui::procedural::possibility::ProceduralPossibility;
 use crate::ui::procedural::possibility_data::*;
+use crate::utils::macros::ok_or;
+use crate::utils::output_clipboard;
 
 mod imp {
-    use adw::{ButtonRow, EntryRow, ExpanderRow, SpinRow, SwitchRow};
-    use anyhow::anyhow;
-    use gtk::{
-        Button, ListBox,
-        glib::{clone, closure, closure_local},
-    };
 
-    use crate::utils::output_clipboard;
+    use crate::ui::procedural;
 
     use super::*;
 
@@ -40,9 +41,13 @@ mod imp {
         #[template_child]
         proc_chance: TemplateChild<SpinRow>,
         #[template_child]
-        proc_stat: TemplateChild<ExpanderRow>,
+        proc_stat: TemplateChild<ComboRow>,
         #[template_child]
-        pub poss_list_box: TemplateChild<ListBox>,
+        poss_list_box: TemplateChild<ListBox>,
+        #[template_child]
+        poss_pattern: TemplateChild<EntryRow>,
+        #[template_child]
+        poss_flag: TemplateChild<ComboRow>,
         #[template_child]
         poss_generate_btn: TemplateChild<ButtonRow>,
         #[template_child]
@@ -154,17 +159,28 @@ mod imp {
                 builder.chance(self.proc_chance.value());
             }
 
+            let stat = ok_or!(
+                self.proc_stat
+                    .selected_item()
+                    .and_downcast::<StringObject>(),
+                "Could not get selected stat"
+            )?
+            .string();
+
+            if let Some(stat) = Stat::from_name(stat.as_str()) {
+                builder.stat(stat);
+            }
+
             let possibilities = self.get_poss();
             for item in possibilities.into_iter() {
                 let poss = item.map(|o| o)?;
-                let poss = poss
-                    .downcast_ref::<PossibilityData>()
-                    .ok_or(anyhow!("Could not get PossibilityData"))?;
+                let poss = ok_or!(
+                    poss.downcast_ref::<PossibilityData>(),
+                    "Could not get PossibilityData"
+                )?;
 
                 let name = poss.name();
-                let name = name
-                    .as_deref()
-                    .ok_or(anyhow!("Could not get possibility name"))?;
+                let name = ok_or!(name.as_deref(), "Could not get possibility name")?;
                 let name = if name.is_empty() { None } else { Some(name) };
 
                 let chance = if poss.chance_enabled() {
@@ -177,6 +193,38 @@ mod imp {
             }
 
             builder.build()
+        }
+
+        fn generate_procedural(&self) -> Result<String> {
+            let proc = self.build_procedural()?;
+            Ok(proc.generate_procedural_string())
+        }
+
+        fn generate_possible_names(&self) -> Result<String> {
+            let proc = self.build_procedural()?;
+            proc.generate_possible_names(self.get_possible_flag()?)
+        }
+
+        fn generate_possible_phrases(&self) -> Result<String> {
+            let proc = self.build_procedural()?;
+
+            let pattern = self.poss_pattern.text();
+            if pattern.is_empty() {
+                bail!("A pattern must be provided")
+            };
+
+            proc.generate_possible_containing_phrases(pattern.as_str(), self.get_possible_flag()?)
+        }
+
+        fn get_possible_flag(&self) -> Result<PossibleFlag> {
+            let flag = ok_or!(
+                self.poss_flag
+                    .selected_item()
+                    .and_downcast::<StringObject>(),
+                "Could not get selected flag"
+            )?;
+
+            Ok(PossibleFlag::from(flag.string().as_str()))
         }
 
         #[template_callback]
@@ -192,13 +240,24 @@ mod imp {
         }
         #[template_callback]
         fn on_poss_generate_btn_activated(&self) {
-            let proc = self.build_procedural();
-
-            match proc {
-                Ok(proc) => {
-                    if let Err(e) = output_clipboard(&proc.generate_procedural_string()) {
+            let procedural = self.generate_procedural();
+            match procedural {
+                Ok(procedural) => {
+                    output_clipboard(&procedural).expect("");
+                    self.show_toast("Copied");
+                }
+                Err(e) => {
+                    self.show_toast(&e.to_string());
+                }
+            }
+        }
+        #[template_callback]
+        fn on_names_generate_btn_activated(&self) {
+            let names = self.generate_possible_names();
+            match names {
+                Ok(names) => {
+                    if let Err(e) = output_clipboard(&names) {
                         self.show_toast(&e.to_string());
-                        error!("Could not copy procedural string: {e}");
                     } else {
                         self.show_toast("Copied");
                     }
@@ -209,35 +268,18 @@ mod imp {
             }
         }
         #[template_callback]
-        fn on_names_generate_btn_activated(&self) {
-            let proc = self.build_procedural();
+        fn on_containing_phrases_generate_btn_activated(&self) {
+            let phrases = self.generate_possible_phrases();
 
-            match proc {
-                Ok(proc) => {
-                    // proc.generate_possible_names();
-                    match proc.generate_possible_names(PossibleFlag::None) {
-                        Ok(names) => {
-                            if let Err(e) = output_clipboard(&names) {
-                                self.show_toast(&e.to_string());
-                            } else {
-                                self.show_toast("Copied");
-                            }
-                        }
-                        Err(e) => {
-                            self.show_toast(&e.to_string());
-                        }
-                    }
+            match phrases {
+                Ok(p) => {
+                    output_clipboard(&p).expect("Could not output to clipboard");
                 }
                 Err(e) => {
+                    error!("Could not generate phrases: {e}");
                     self.show_toast(&e.to_string());
                 }
             }
-        }
-        #[template_callback]
-        fn on_containing_phrases_generate_btn_activated(&self) {
-            let proc = self.build_procedural();
-
-            todo!()
         }
     }
 }

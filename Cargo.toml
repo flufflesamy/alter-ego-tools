@@ -13,7 +13,7 @@ codegen-units = 1
 panic = "abort"
 
 [profile.dev]
-debug = 0
+# debug = 0
 
 [dependencies]
 anyhow = "1.0.102"
@@ -21,6 +21,7 @@ gettext-rs = { version = "0.7", features = ["gettext-system"] }
 regex = "1.12.3"
 tracing = "0.1.44"
 tracing-subscriber = "0.3"
+itertools = "0.14.0"
 
 # GTK
 gtk = { version = "0.11", package = "gtk4", features = ["gnome_50", "blueprint"] }

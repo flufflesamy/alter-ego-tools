@@ -18,6 +18,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
       start-child: Frame {
         Adw.PreferencesPage proc_page {
           title: _("Procedural Generator Input");
+          // TODO: Add a proper description
           description: _("To generate a procedural, TODO");
 
           Adw.PreferencesGroup proc_group {
@@ -43,12 +44,23 @@ template $AETContentProcedural: Adw.BreakpointBin {
               title: _("Procedural Name");
             }
 
+            Adw.ExpanderRow proc_stat {
+              title: _("Stat");
+              subtitle: _("Player Stat");
+            }
+
+            Adw.SwitchRow proc_chance_enabled {
+              title: _("Enable Chance");
+              subtitle: _("Enable to set a chance for the procedural");
+            }
+
             Adw.SpinRow proc_chance {
               title: _("Chance");
               subtitle: _("Percentage 0-100%");
               numeric: true;
               digits: 2;
               climb-rate: 1;
+              visible: bind proc_chance_enabled.active;
 
               adjustment: Adjustment {
                 lower: 0;
@@ -57,11 +69,6 @@ template $AETContentProcedural: Adw.BreakpointBin {
                 page-increment: 10;
                 step-increment: 0.5;
               };
-            }
-
-            Adw.ExpanderRow proc_stat {
-              title: _("Stat");
-              subtitle: _("Player Stat");
             }
           }
 
@@ -88,33 +95,33 @@ template $AETContentProcedural: Adw.BreakpointBin {
               selection-mode: none;
             }
           }
-        }
 
-        Adw.PreferencesGroup action_group {
-          title: _("Generate Procedural");
-          description: _("Generate procedurals here");
-
-          Adw.EntryRow possible_pattern {
-            title: _("Possible Pattern");
-          }
-
-          Adw.ExpanderRow possible_mode {
-            title: _("Replacement Mode");
-          }
-
-          Adw.ButtonRow poss_generate_btn {
+          Adw.PreferencesGroup action_group {
             title: _("Generate Procedural");
-            activated => $on_poss_generate_btn_activated(template);
-          }
+            description: _("Generate procedurals here");
 
-          Adw.ButtonRow names_generate_btn {
-            title: _("Generate Possible Names");
-            activated => $on_names_generate_btn_activated(template);
-          }
+            Adw.EntryRow possible_pattern {
+              title: _("Possible Pattern");
+            }
 
-          Adw.ButtonRow containing_phrases_generate_btn {
-            title: _("Generate Possible Containing Phrases");
-            activated => $on_containing_phrases_generate_btn_activated(template);
+            Adw.ExpanderRow possible_mode {
+              title: _("Replacement Mode");
+            }
+
+            Adw.ButtonRow poss_generate_btn {
+              title: _("Generate Procedural");
+              activated => $on_poss_generate_btn_activated(template);
+            }
+
+            Adw.ButtonRow names_generate_btn {
+              title: _("Generate Possible Names");
+              activated => $on_names_generate_btn_activated(template);
+            }
+
+            Adw.ButtonRow containing_phrases_generate_btn {
+              title: _("Generate Possible Containing Phrases");
+              activated => $on_containing_phrases_generate_btn_activated(template);
+            }
           }
         }
       };

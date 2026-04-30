@@ -5,9 +5,13 @@ use gtk::{gdk, gio, glib};
 use crate::ui::procedural::possibility_data::PossibilityData;
 
 mod imp {
-    use adw::{EntryRow, SpinRow};
-    use gtk::{Button, glib::Binding, template_callbacks};
-    use std::cell::RefCell;
+    use adw::{EntryRow, SpinRow, SwitchRow};
+    use gtk::{
+        Button,
+        glib::{Binding, subclass::Signal},
+        template_callbacks,
+    };
+    use std::{cell::RefCell, sync::OnceLock};
 
     use crate::ui::procedural::possibility_data::PossibilityData;
 
@@ -17,12 +21,14 @@ mod imp {
     #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/possibility.ui")]
     #[properties(wrapper_type = super::ProceduralPossibility)]
     pub struct AETProceduralPossibility {
-        #[property(get, set, construct_only)]
+        #[property(get, construct_only)]
         pub possibility_data: RefCell<Option<PossibilityData>>,
         #[template_child]
         poss_remove_btn: TemplateChild<Button>,
         #[template_child]
         poss_name: TemplateChild<EntryRow>,
+        #[template_child]
+        poss_chance_enabled: TemplateChild<SwitchRow>,
         #[template_child]
         poss_chance: TemplateChild<SpinRow>,
     }
@@ -43,16 +49,35 @@ mod imp {
         }
     }
 
+    #[glib::derived_properties]
     impl ObjectImpl for AETProceduralPossibility {
         fn constructed(&self) {
             self.parent_constructed();
 
             // Bind data to controls
-            let data = self.possibility_data.borrow().as_ref().cloned().unwrap();
+            let data = self
+                .possibility_data
+                .borrow()
+                .as_ref()
+                .cloned()
+                .expect("possibility_data is None");
             let name = self.poss_name.get();
             let chance = self.poss_chance.get();
-            data.bind_property("name", &name, "text").build();
-            data.bind_property("chance", &chance, "value").build();
+            let enabled = self.poss_chance_enabled.get();
+            data.bind_property("name", &name, "text")
+                .bidirectional()
+                .build();
+            data.bind_property("chance", &chance, "value")
+                .bidirectional()
+                .build();
+            data.bind_property("chance_enabled", &enabled, "active")
+                .bidirectional()
+                .build();
+        }
+
+        fn signals() -> &'static [Signal] {
+            static SIGNALS: OnceLock<Vec<Signal>> = OnceLock::new();
+            SIGNALS.get_or_init(|| vec![Signal::builder("remove").build()])
         }
     }
 
@@ -63,7 +88,10 @@ mod imp {
     #[template_callbacks]
     impl AETProceduralPossibility {
         #[template_callback]
-        fn on_poss_remove_btn_clicked() {}
+        fn on_poss_remove_btn_clicked(&self) {
+            // Emit remove signal
+            self.obj().emit_by_name::<()>("remove", &[]);
+        }
     }
 }
 
@@ -76,7 +104,7 @@ glib::wrapper! {
 impl ProceduralPossibility {
     pub fn new(possibility_data: &PossibilityData) -> Self {
         glib::Object::builder()
-            .property("possibility_data", &possibility_data)
+            .property("possibility-data", possibility_data)
             .build()
     }
 }

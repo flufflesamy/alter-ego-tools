@@ -2,12 +2,6 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::glib::{self, Object};
 
-// #[derive(Default, Debug)]
-// pub struct PossibilityData {
-//     pub name: String,
-//     pub chance: f64,
-// }
-
 mod imp {
     use super::*;
     use gtk::glib::Properties;
@@ -16,18 +10,17 @@ mod imp {
     #[derive(Properties, Default)]
     #[properties(wrapper_type = super::PossibilityData)]
     pub struct PossibilityData {
-        // #[property(name = "name", get, set, type = String, member = name)]
-        // #[property(name = "chance", get, set, type = f64, member = chance)]
-        // pub data: RefCell<PossibilityData>,
         #[property(get, set)]
         name: RefCell<Option<String>>,
         #[property(get, set, minimum = 0.0, maximum = 100.0)]
         chance: Cell<f64>,
+        #[property(get, set)]
+        chance_enabled: Cell<bool>,
     }
 
     #[glib::object_subclass]
     impl ObjectSubclass for PossibilityData {
-        const NAME: &'static str = "AETPossibilityObject";
+        const NAME: &'static str = "AETPossibilityData";
         type Type = super::PossibilityData;
     }
 
@@ -40,10 +33,17 @@ glib::wrapper! {
 }
 
 impl PossibilityData {
-    pub fn new(name: String, chance: f64) -> Self {
+    pub fn new(name: String, chance: f64, chance_enabled: bool) -> Self {
         Object::builder()
             .property("name", name)
             .property("chance", chance)
+            .property("chance_enabled", chance_enabled)
             .build()
+    }
+}
+
+impl Default for PossibilityData {
+    fn default() -> Self {
+        Self::new(String::new(), 0.0, false)
     }
 }

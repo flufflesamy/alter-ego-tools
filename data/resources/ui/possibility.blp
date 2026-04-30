@@ -12,19 +12,25 @@ template $AETProceduralPossibility: ListBoxRow {
 
       title: _("Possibility");
 
-      activatable-widget: Button poss_remove_btn {
+      [suffix]
+      Button poss_remove_btn {
         has-frame: false;
-        valign: baseline_center;
+        valign: center;
         clicked => $on_poss_remove_btn_clicked(template);
 
         Adw.ButtonContent {
           icon-name: "minus-symbolic";
         }
-      };
+      }
     }
 
     Adw.EntryRow poss_name {
       title: _("Possibility Name");
+    }
+
+    Adw.SwitchRow poss_chance_enabled {
+      title: _("Enable Chance");
+      subtitle: _("Enable to set a chance for the possibility");
     }
 
     Adw.SpinRow poss_chance {
@@ -33,6 +39,7 @@ template $AETProceduralPossibility: ListBoxRow {
       numeric: true;
       digits: 2;
       climb-rate: 1;
+      visible: bind poss_chance_enabled.active;
 
       adjustment: Adjustment {
         lower: 0;

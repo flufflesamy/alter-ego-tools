@@ -43,7 +43,18 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for AETProceduralPossibility {}
+    impl ObjectImpl for AETProceduralPossibility {
+        fn constructed(&self) {
+            self.parent_constructed();
+
+            // Bind data to controls
+            let data = self.possibility_data.borrow().as_ref().cloned().unwrap();
+            let name = self.poss_name.get();
+            let chance = self.poss_chance.get();
+            data.bind_property("name", &name, "text").build();
+            data.bind_property("chance", &chance, "value").build();
+        }
+    }
 
     impl WidgetImpl for AETProceduralPossibility {}
 

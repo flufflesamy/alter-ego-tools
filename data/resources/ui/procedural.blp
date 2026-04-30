@@ -91,6 +91,17 @@ template $AETContentProcedural: Adw.BreakpointBin {
         }
 
         Adw.PreferencesGroup action_group {
+          title: _("Generate Procedural");
+          description: _("Generate procedurals here");
+
+          Adw.EntryRow possible_pattern {
+            title: _("Possible Pattern");
+          }
+
+          Adw.ExpanderRow possible_mode {
+            title: _("Replacement Mode");
+          }
+
           Adw.ButtonRow poss_generate_btn {
             title: _("Generate Procedural");
             activated => $on_poss_generate_btn_activated(template);

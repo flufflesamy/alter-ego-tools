@@ -1,4 +1,6 @@
-use anyhow::{Result, bail};
+#![allow(dead_code)]
+
+use anyhow::{Result, anyhow, bail};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Stat {
@@ -53,18 +55,22 @@ impl Procedural {
         ProceduralBuilder::default()
     }
 
+    /// Returns a reference to the optional name of the procedural.
     pub fn name(&self) -> &Option<String> {
         &self.name
     }
 
+    /// Returns a reference to the optional chance value of the procedural.
     pub fn chance(&self) -> &Option<f64> {
         &self.chance
     }
 
+    /// Returns a reference to the optional stat associated with the procedural.
     pub fn stat(&self) -> &Option<Stat> {
         &self.stat
     }
 
+    /// Returns a reference to the vector of possibilities (name, chance) tuples.
     pub fn possibilities(&self) -> &Vec<Possibility> {
         &self.possibilities
     }
@@ -77,7 +83,7 @@ impl Procedural {
     ///
     /// ```rs
     /// // Build procedural with builder
-    /// let procedural = ProceduralBuilder::new().build();
+    /// let procedural = ProceduralBuilder::new().build().unwrap();
     /// // Generate string from procedural
     /// let generated = procedural.generate_procedural_string();
     /// let proc_string = String::from("<procedural></procedural>");
@@ -109,15 +115,19 @@ impl Procedural {
     ///     .name("beverage flavor")
     ///     // Must have at least one named possibility
     ///     .possibility(Some("water"), None)
-    ///     .build();
-    /// let names = procedural.generate_possible_names(PossibleFlag::Uppercase);
+    ///     .build()
+    ///     .unwrap();
+    /// let names = procedural.generate_possible_names(PossibleFlag::Uppercase).unwrap();
     /// let expected = "[beverage flavor=water: WATER]";
     ///
     /// assert_eq!(names, expected);
     /// ```
     pub fn generate_possible_names(&self, flag: PossibleFlag) -> Result<String> {
         // If procedural doesn't have name, bail
-        let name = self.get_some_name()?;
+        let name = self
+            .name
+            .as_deref()
+            .ok_or(anyhow!("Procedural must have name."))?;
 
         // Turn possibilities into tags
         let possibilities_tags: Vec<String> = self
@@ -146,10 +156,11 @@ impl Procedural {
     ///     .name("beverage flavor")
     ///     // Must have at least one named possibility
     ///     .possibility(Some("water"), None)
-    ///     .build();
+    ///     .build()
+    ///     .unwrap();
     /// // {} denotes placeholders
     /// let pattern = "a bottle of {}, bottles of {}";
-    /// let names = procedural.generate_possible_containing_phrases(pattern, PossibleFlag::Uppercase);
+    /// let names = procedural.generate_possible_containing_phrases(pattern, PossibleFlag::Uppercase).unwrap();
     /// let expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER]";
     ///
     /// assert_eq!(names, expected);
@@ -159,8 +170,10 @@ impl Procedural {
         pattern: &str,
         flag: PossibleFlag,
     ) -> Result<String> {
-        let name = self.get_some_name()?;
-
+        let name = self
+            .name
+            .as_deref()
+            .ok_or(anyhow!("Procedural must have name."))?;
         let possibilities_tags: Vec<String> = self
             .get_named_possibilities()?
             .into_iter()
@@ -169,6 +182,8 @@ impl Procedural {
         Ok(self.join_tags(possibilities_tags))
     }
 
+    /// Generates the opening `<procedural ...>` tag including optional
+    /// `name`, `chance`, and `stat` attributes.
     fn generate_proc_tag(&self) -> String {
         // Format 'some_name' => 'name="some_name"' if set
         let name_string = self.to_attribute("name", &self.name);
@@ -180,6 +195,7 @@ impl Procedural {
         self.to_attribute_tag("procedural", vec![name_string, chance_string, stat_string])
     }
 
+    /// Generates the `<poss ...>name</poss>` tags for each possibility.
     fn generate_poss_tags(&self) -> String {
         let mut poss_string: Vec<String> = Vec::new();
         for (name, chance) in self.possibilities() {
@@ -205,6 +221,9 @@ impl Procedural {
         poss_string.join("")
     }
 
+    /// Formats an optional attribute value into an XML attribute string.
+    ///
+    /// Returns `attr_name="value"` if the attribute is `Some`, otherwise returns an empty string.
     fn to_attribute<T: ToString>(&self, attr_name: &str, attribute: &Option<T>) -> String {
         match attribute {
             Some(a) => {
@@ -215,6 +234,9 @@ impl Procedural {
         }
     }
 
+    /// Builds an XML-style opening tag with the given attributes.
+    ///
+    /// Returns `<tag_name attr1="v1" attr2="v2">`. Empty attribute strings are omitted.
     fn to_attribute_tag(&self, tag_name: &str, attributes: Vec<String>) -> String {
         let mut tag: Vec<String> = Vec::new();
         // Add opening brace and tag name
@@ -231,6 +253,9 @@ impl Procedural {
         tag.join("")
     }
 
+    /// Builds a phrase-tag string of the form `[tag_name=attribute: phrase]`.
+    ///
+    /// Replaces all `{}` placeholders in `pattern` with the (possibly transformed) attribute value.
     fn to_possible_phrase_tag(
         &self,
         tag_name: &str,
@@ -243,11 +268,17 @@ impl Procedural {
         format!("[{tag_name}={attribute}: {replaced_phrase}]")
     }
 
+    /// Builds a name-tag string of the form `[tag_name=attribute: TRANSFORMED]`.
     fn to_possible_name_tag(&self, tag_name: &str, attribute: &str, flag: PossibleFlag) -> String {
         let transformed = self.transform_possible_attribute(attribute, flag);
         format!("[{tag_name}={attribute}: {transformed}]")
     }
 
+    /// Transforms an attribute string according to the given flag.
+    ///
+    /// - `PossibleFlag::None` returns the string unchanged.
+    /// - `PossibleFlag::Uppercase` converts to uppercase.
+    /// - `PossibleFlag::Lowercase` converts to lowercase.
     fn transform_possible_attribute(&self, attribute: &str, flag: PossibleFlag) -> String {
         match flag {
             PossibleFlag::None => attribute.to_owned(),
@@ -256,6 +287,7 @@ impl Procedural {
         }
     }
 
+    /// Joins a list of tag strings into a single string, separated by `", "`.
     fn join_tags(&self, tags: Vec<String>) -> String {
         let len = tags.len();
         tags.iter()
@@ -273,6 +305,9 @@ impl Procedural {
             .collect::<String>()
     }
 
+    /// Returns a vector of names from possibilities that have a name set.
+    ///
+    /// Bails with an error if no possibility has a name.
     fn get_named_possibilities(&self) -> Result<Vec<String>> {
         // filter into where name is present and discard chance
         let some: Vec<String> = self
@@ -286,14 +321,6 @@ impl Procedural {
             bail!("At least one possibility must be named.")
         }
         Ok(some)
-    }
-
-    fn get_some_name(&self) -> Result<&str> {
-        if let Some(name) = &self.name {
-            Ok(name)
-        } else {
-            bail!("Procedural must be named.")
-        }
     }
 }
 
@@ -311,21 +338,25 @@ impl ProceduralBuilder {
         ProceduralBuilder::default()
     }
 
+    /// Sets the name of the procedural.
     pub fn name(&mut self, name: &str) -> &mut ProceduralBuilder {
         self.name = Some(name.to_owned());
         self
     }
 
+    /// Sets the chance value for the procedural.
     pub fn chance(&mut self, chance: f64) -> &mut ProceduralBuilder {
         self.chance = Some(chance);
         self
     }
 
+    /// Sets the stat associated with the procedural.
     pub fn stat(&mut self, stat: Stat) -> &mut ProceduralBuilder {
         self.stat = Some(stat);
         self
     }
 
+    /// Adds a single possibility with an optional name and optional chance.
     pub fn possibility(
         &mut self,
         name: Option<&str>,
@@ -336,6 +367,7 @@ impl ProceduralBuilder {
         self
     }
 
+    /// Adds multiple possibilities from a vector of (optional name, optional chance) tuples.
     pub fn possibilities(
         &mut self,
         possibilities: Vec<(Option<&str>, Option<f64>)>,
@@ -382,6 +414,7 @@ impl ProceduralBuilder {
         })
     }
 
+    /// Validates that a chance value is within the range `0.0..=100.0`.
     fn validate_chance(&self, chance: &f64) -> bool {
         if chance > &100.0 || chance < &0.0 {
             false

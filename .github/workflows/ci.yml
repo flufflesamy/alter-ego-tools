@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 
 name: CI
@@ -27,10 +27,10 @@ jobs:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
       options: --privileged
     steps:
-    - uses: actions/checkout@v6
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-      with:
-        bundle: alter-ego-tools.flatpak
-        manifest-path: build-aux/com.flufflesamy.AlterEgoTools.Devel.json
-        run-tests: true
-        cache-key: flatpak-builder-${{ github.sha }}
+      - uses: actions/checkout@v6
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: alter-ego-tools.flatpak
+          manifest-path: build-aux/com.flufflesamy.AlterEgoTools.Devel.json
+          run-tests: true
+          cache-key: flatpak-builder-${{ github.sha }}

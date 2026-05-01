@@ -70,8 +70,8 @@ mod imp {
 
             // Set up the source view with Adwaita style scheme
             if let Some(ref scheme) = sourceview5::StyleSchemeManager::new().scheme(scheme_name) {
-                input_buffer.set_style_scheme(Some(&scheme));
-                output_buffer.set_style_scheme(Some(&scheme));
+                input_buffer.set_style_scheme(Some(scheme));
+                output_buffer.set_style_scheme(Some(scheme));
             } else {
                 debug!("Style scheme not found");
             }
@@ -80,14 +80,14 @@ mod imp {
 
             // Set up input language to markdown
             if let Some(ref language) = language_mananger.language("markdown") {
-                input_buffer.set_language(Some(&language));
+                input_buffer.set_language(Some(language));
             } else {
                 debug!("Language not found");
             }
 
             // Set up  language to XML
             if let Some(ref language) = language_mananger.language("xml") {
-                output_buffer.set_language(Some(&language));
+                output_buffer.set_language(Some(language));
             } else {
                 debug!("Language not found");
             }

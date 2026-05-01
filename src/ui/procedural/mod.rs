@@ -125,8 +125,7 @@ mod imp {
                     move |item| {
                         // Create possibility widget from PossibilityData
                         let poss = ProceduralPossibility::new(
-                            &item
-                                .downcast_ref::<PossibilityData>()
+                            item.downcast_ref::<PossibilityData>()
                                 .expect("Model is of wrong type."),
                         );
 
@@ -164,14 +163,14 @@ mod imp {
 
             // Set up the source view with Adwaita style scheme
             if let Some(ref scheme) = sourceview5::StyleSchemeManager::new().scheme(scheme_name) {
-                buffer.set_style_scheme(Some(&scheme));
+                buffer.set_style_scheme(Some(scheme));
             } else {
                 debug!("Style scheme not found");
             }
 
             // Set up language to XML
             if let Some(ref language) = sourceview5::LanguageManager::new().language("xml") {
-                buffer.set_language(Some(&language));
+                buffer.set_language(Some(language));
             } else {
                 debug!("Language not found");
             }
@@ -204,7 +203,7 @@ mod imp {
 
             let possibilities = self.get_poss();
             for item in possibilities.into_iter() {
-                let poss = item.map(|o| o)?;
+                let poss = item?;
                 let poss = ok_or!(
                     poss.downcast_ref::<PossibilityData>(),
                     "Could not get PossibilityData"

@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use anyhow::{Result, anyhow, bail};
+use std::fmt::Display;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Stat {
@@ -33,26 +34,40 @@ impl Stat {
     }
 }
 
-impl ToString for Stat {
-    /// Converts the given Stat to a short string.
-    ///
-    /// # Examples
-    /// ```rs
-    /// let stat_string = Stat::Perception.to_string();
-    /// let per = String::from("per");
-    ///
-    /// assert_eq!(per, stat_string);
-    /// ```
-    fn to_string(&self) -> String {
-        match self {
-            Stat::Strength => "str".into(),
-            Stat::Perception => "per".into(),
-            Stat::Dexterity => "dex".into(),
-            Stat::Speed => "spd".into(),
-            Stat::Stamina => "sta".into(),
-        }
+impl Display for Stat {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let out = match self {
+            Stat::Strength => "str",
+            Stat::Perception => "per",
+            Stat::Dexterity => "dex",
+            Stat::Speed => "spd",
+            Stat::Stamina => "sta",
+        };
+
+        write!(f, "{out}")
     }
 }
+
+// impl ToString for Stat
+//     /// Converts the given Stat to a short string.
+//     ///
+//     /// # Examples
+//     /// ```rs
+//     /// let stat_string = Stat::Perception.to_string();
+//     /// let per = String::from("per");
+//     ///
+//     /// assert_eq!(per, stat_string);
+//     /// ```
+//     fn to_string(&self) -> String {
+//         match self {
+//             Stat::Strength => "str".into(),
+//             Stat::Perception => "per".into(),
+//             Stat::Dexterity => "dex".into(),
+//             Stat::Speed => "spd".into(),
+//             Stat::Stamina => "sta".into(),
+//         }
+//     }
+// }
 
 #[derive(Debug, Clone, Copy)]
 pub enum PossibleFlag {
@@ -103,9 +118,8 @@ impl Procedural {
     /// assert_eq!(proc_string, generated);
     /// ```
     pub fn generate_procedural_string(&self) -> String {
-        let mut parts: Vec<String> = Vec::new();
         // Push <procedural...>
-        parts.push(self.generate_proc_tag());
+        let mut parts = vec![self.generate_proc_tag()];
         // Push possibilities
         parts.push(self.generate_poss_tags());
         // Push closing </procedural>
@@ -145,7 +159,7 @@ impl Procedural {
         let possibilities_tags: Vec<String> = self
             .get_named_possibilities()?
             .iter()
-            .map(|p| self.to_possible_name_tag(name, &p, flag))
+            .map(|p| self.to_possible_name_tag(name, p, flag))
             .collect();
 
         // Join tags into string
@@ -189,7 +203,7 @@ impl Procedural {
         let possibilities_tags: Vec<String> = self
             .get_named_possibilities()?
             .iter()
-            .map(|p| self.to_possible_phrase_tag(name, &p, pattern, flag))
+            .map(|p| self.to_possible_phrase_tag(name, p, pattern, flag))
             .collect();
         Ok(possibilities_tags.join(", "))
     }
@@ -385,35 +399,31 @@ impl ProceduralBuilder {
     /// let procedural = builder.build();
     /// ```
     pub fn build(&self) -> Result<Procedural> {
-        if let Some(c) = self.chance {
-            if !self.validate_chance(&c) {
-                bail!("Chance {c} cannot be more than 100 or be less than 0.");
-            }
+        if let Some(c) = self.chance
+            && !self.validate_chance(&c)
+        {
+            bail!("Chance {c} cannot be more than 100 or be less than 0.");
         }
 
         for (_, chance) in &self.possibilities {
-            if let Some(c) = chance {
-                if !self.validate_chance(c) {
-                    bail!("Possibility {c} cannot be more than 100 or be less than 0.");
-                }
+            if let Some(c) = chance
+                && !self.validate_chance(c)
+            {
+                bail!("Possibility {c} cannot be more than 100 or be less than 0.");
             }
         }
 
         Ok(Procedural {
             name: self.name.clone(),
             chance: self.chance,
-            stat: self.stat.clone(),
+            stat: self.stat,
             possibilities: self.possibilities.clone(),
         })
     }
 
     /// Validates that a chance value is within the range `0.0..=100.0`.
     fn validate_chance(&self, chance: &f64) -> bool {
-        if chance > &100.0 || chance < &0.0 {
-            false
-        } else {
-            true
-        }
+        (&0.0..=&100.0).contains(&chance)
     }
 }
 

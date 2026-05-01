@@ -84,11 +84,9 @@ mod imp {
         // }
 
         fn current_page(&self) -> Option<ViewStackPage> {
-            if let Some(widget) = self.stack.visible_child() {
-                Some(self.stack.page(&widget))
-            } else {
-                None
-            }
+            self.stack
+                .visible_child()
+                .map(|widget| self.stack.page(&widget))
         }
 
         fn current_page_title(&self) -> String {

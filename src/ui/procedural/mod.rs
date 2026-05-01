@@ -32,7 +32,7 @@ mod imp {
     pub struct AETContentProcedural {
         possibilities: RefCell<Option<ListStore>>,
         #[template_child]
-        proc_poss_add_btn: TemplateChild<Button>,
+        proc_poss_add_btn: TemplateChild<ButtonRow>,
         #[template_child]
         proc_clear_btn: TemplateChild<Button>,
         #[template_child]
@@ -270,7 +270,7 @@ mod imp {
             self.poss_flag.set_selected(0);
         }
         #[template_callback]
-        fn on_poss_add_btn_clicked(&self) {
+        fn on_poss_add_btn_activated(&self) {
             let poss = PossibilityData::default();
             let model = self.get_poss();
             model.append(&poss);

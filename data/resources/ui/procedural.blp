@@ -12,7 +12,6 @@ template $AETContentProcedural: Adw.BreakpointBin {
 
     Box {
       homogeneous: true;
-      margin-top: 12;
       margin-bottom: 12;
       margin-start: 12;
       margin-end: 12;
@@ -88,23 +87,20 @@ template $AETContentProcedural: Adw.BreakpointBin {
             title: _("Possibilities");
             description: _("Procedurals can have multiple possibilites.");
 
-            header-suffix: Button proc_poss_add_btn {
-              label: _("Add Possibility");
-              has-frame: false;
-              clicked => $on_poss_add_btn_clicked(template);
-
-              child: Adw.ButtonContent {
-                label: _("Add Possibility");
-                icon-name: "plus-symbolic";
-              };
-            };
-
             ListBox poss_list_box {
               styles [
                 "boxed-list-separate",
               ]
 
               selection-mode: none;
+            }
+          }
+
+          Adw.PreferencesGroup {
+            Adw.ButtonRow proc_poss_add_btn {
+              title: _("Add Possibility");
+              end-icon-name: "plus-symbolic";
+              activated => $on_poss_add_btn_activated(template);
             }
           }
 
@@ -160,7 +156,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
             vexpand: true;
 
             child: GtkSource.View source_view {
-              tab-width: 4;
+              tab-width: 2;
               auto-indent: true;
               wrap-mode: word;
               monospace: true;
@@ -168,6 +164,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
               // highlight-current-line: true;
               buffer: GtkSource.Buffer source_buffer {
                 highlight-syntax: true;
+                highlight-matching-brackets: true;
               };
             };
           }

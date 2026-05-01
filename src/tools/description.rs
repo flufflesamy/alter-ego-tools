@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use regex::Regex;
 
 /// This function converts a string slice to a String containing an Alter Ego Description.
@@ -10,15 +11,19 @@ pub fn str_to_description(input: &str) -> anyhow::Result<String> {
     let mut output: Vec<String> = vec!["<desc>".to_owned()];
 
     // Split into sentences with <s> tags
-    let re = Regex::new(r"[\n\r]|```(?:\w+\n)?[\s\S]*?```|.*?[!.?][ \t]*|.*?\z")?;
+    // let re = Regex::new(r"[\n\r]|```(?:\w+\n)?[\s\S]*?```|.*?[!.?][ \t]*|.*?\z")?;
+    let re =
+        Regex::new(r"`[\n\r]|```(?:\w+\n)?[\s\S]*?```|.*?(?:(?:!|\?|\n)|(?:\.\s+))[ \t\s]*|.*?\z")?;
     output.push(
         re.find_iter(input)
             .map(|m| m.as_str().replace(['\n', '\r'], "<br />"))
             .map(|s| {
-                if s.is_empty() {
-                    "".to_owned()
-                } else if s == ("<br />") || s.contains("```") {
+                if s.is_empty() || s == ("<br />") {
                     s
+                } else if s.ends_with("<br />") {
+                    let br = s.rmatches("<br />").join("");
+                    let s = s.split("<br />").join("");
+                    "<s>".to_owned() + &s + "</s>" + &br
                 } else if s.ends_with(" ") {
                     "<s>".to_owned() + s.trim_end() + "</s> "
                 } else {
@@ -97,5 +102,15 @@ The following options are available:
         let result = str_to_description(input);
 
         assert_eq!(expected, result.unwrap().as_str());
+    }
+
+    #[test]
+    fn codeblock_test() {
+        let input = "It's a large, white refrigerator with a FREEZER compartment on top. When you open up the fridge, you see SHELF 1, SHELF 2, and SHELF 3. At the bottom are two crispers: CRISPER 1 and CRISPER 2. The inside of the door has some TRAYS.\n\nThere's a laminated piece of paper hung on the door of the fridge. It reads:\n```\nREFRIGERATOR RULES:\n1. Don't overfill it!\n2. Follow the labels when putting things inside\n3. Sharing is caring :)\n4. Let the group chat know when you've made extra\n\n- Adelaide Castelo\n```";
+        let expected = "<desc><s>It's a large, white refrigerator with a FREEZER compartment on top.</s> <s>When you open up the fridge, you see SHELF 1, SHELF 2, and SHELF 3.</s> <s>At the bottom are two crispers: CRISPER 1 and CRISPER 2.</s> <s>The inside of the door has some TRAYS.</s><br /><br /><s>There's a laminated piece of paper hung on the door of the fridge.</s> <s>It reads:</s><br /><s>```<br />REFRIGERATOR RULES:<br />1. Don't overfill it!<br />2. Follow the labels when putting things inside<br />3. Sharing is caring :)<br />4. Let the group chat know when you've made extra<br /><br />- Adelaide Castelo<br />```</s></desc>";
+
+        let result = str_to_description(input);
+
+        assert_eq!(expected, result.unwrap());
     }
 }

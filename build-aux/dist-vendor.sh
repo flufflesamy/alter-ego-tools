@@ -6,7 +6,7 @@ export CARGO_HOME="$1"
 export CARGO_TARGET_DIR="$2"
 
 cd "$MESON_SOURCE_ROOT"
-mkdir "$MESON_DIST_ROOT"/.cargo
+mkdir -p "$MESON_DIST_ROOT"/.cargo
 # cargo-vendor-filterer can be found at https://github.com/coreos/cargo-vendor-filterer
 # It is also part of the Rust SDK extension.
 cargo vendor-filterer --all-features --platform=x86_64-unknown-linux-gnu --platform=aarch64-unknown-linux-gnu > "$MESON_DIST_ROOT"/.cargo/config.toml

@@ -6,23 +6,20 @@ on:
 
 name: CI
 
-permissions:
-  contents: read
-
 jobs:
   rustfmt:
     name: Rustfmt
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: https://data.forgejo.org/actions/checkout@v6
+      - uses: https://github.com/dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
       - run: cargo fmt --all -- --check
 
   flatpak:
     name: Flatpak (${{ matrix.name }})
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -40,8 +37,8 @@ jobs:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
       options: --privileged
     steps:
-      - uses: actions/checkout@v6
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      - uses: https://data.forgejo.org/actions/checkout@v6
+      - uses: https://github.com/flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: ${{ matrix.bundle }}
           manifest-path: ${{ matrix.manifest }}

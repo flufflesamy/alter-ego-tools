@@ -16,6 +16,17 @@
         "--env=G_MESSAGES_DEBUG=none",
         "--env=RUST_BACKTRACE=1"
     ],
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
     "build-options": {
         "append-path": "/usr/lib/sdk/rust-stable/bin",
         "build-args": [
@@ -26,6 +37,7 @@
         },
         "test-args": [
             "--socket=x11",
+            "--socket=wayland",
             "--share=network"
         ]
     },
@@ -46,5 +58,3 @@
         }
     ]
 }
-
-

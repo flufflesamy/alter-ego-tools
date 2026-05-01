@@ -13,8 +13,7 @@
         "--socket=wayland",
         "--device=dri",
         "--env=RUST_LOG=alter_ego_tools=info",
-        "--env=G_MESSAGES_DEBUG=none",
-        "--env=RUST_BACKTRACE=1"
+        "--env=G_MESSAGES_DEBUG=none"
     ],
     "build-options": {
         "append-path": "/usr/lib/sdk/rust-stable/bin",
@@ -26,9 +25,21 @@
         },
         "test-args": [
             "--socket=x11",
+            "--socket=wayland",
             "--share=network"
         ]
     },
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
     "modules": [
         {
             "name": "alter-ego-tools",
@@ -46,5 +57,3 @@
         }
     ]
 }
-
-

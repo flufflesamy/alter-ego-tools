@@ -2,7 +2,7 @@ project(
   'alter-ego-tools',
   'rust',
   version: '0.1.0',
-  meson_version: '>= 0.59',
+  meson_version: '>= 0.62',
   license: 'GPL-3.0-or-later',
 )
 
@@ -11,9 +11,11 @@ gnome = import('gnome')
 
 base_id = 'com.flufflesamy.AlterEgoTools'
 
-dependency('glib-2.0', version: '>= 2.66')
-dependency('gio-2.0', version: '>= 2.66')
-dependency('gtk4', version: '>= 4.0.0')
+dependency('glib-2.0', version: '>= 2.88.0')
+dependency('gio-2.0', version: '>= 2.88.0')
+dependency('gtk4', version: '>= 4.22.0')
+dependency('libadwaita-1', version: '>= 1.9')
+dependency('gtksourceview-5', version: '>= 5.20')
 
 find_program('glib-compile-resources')
 glib_compile_schemas = find_program('glib-compile-schemas')
@@ -85,12 +87,16 @@ if get_option('profile') == 'development'
   message('Setting up git pre-commit hook..')
   run_command(
     'cp',
-    '-f',
-    'hooks/pre-commit.hook',
+    '-f', 'hooks/pre-commit.hook',
     '.git/hooks/pre-commit',
     check: false,
   )
 endif
+
+install_data(
+  'LICENSE',
+  install_dir: datadir / 'licenses' / application_id,
+)
 
 subdir('data')
 subdir('po')

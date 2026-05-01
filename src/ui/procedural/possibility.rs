@@ -1,19 +1,13 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::{gdk, gio, glib};
+use gtk::glib;
 
 use crate::ui::procedural::possibility_data::PossibilityData;
 
 mod imp {
     use adw::{EntryRow, SpinRow, SwitchRow};
-    use gtk::{
-        Button,
-        glib::{Binding, subclass::Signal},
-        template_callbacks,
-    };
+    use gtk::{Button, glib::subclass::Signal, template_callbacks};
     use std::{cell::RefCell, sync::OnceLock};
-
-    use crate::ui::procedural::possibility_data::PossibilityData;
 
     use super::*;
 

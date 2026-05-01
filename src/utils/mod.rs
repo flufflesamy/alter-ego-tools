@@ -1,10 +1,7 @@
 pub mod macros;
 
 use anyhow::{Result, bail};
-use gtk::{
-    gdk::{self, prelude::DisplayExt},
-    gio, glib,
-};
+use gtk::gdk::{self, prelude::DisplayExt};
 
 pub fn output_clipboard(content: &str) -> Result<()> {
     let clipboard = match gdk::Display::default() {

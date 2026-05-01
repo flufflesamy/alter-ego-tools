@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Adw 1;
+using GtkSource 5;
 
 template $AETContentProcedural: Adw.BreakpointBin {
   vexpand: true;
@@ -9,28 +10,28 @@ template $AETContentProcedural: Adw.BreakpointBin {
     [top]
     Adw.HeaderBar {}
 
-    Paned {
+    Box {
+      homogeneous: true;
       margin-top: 12;
       margin-bottom: 12;
       margin-start: 12;
       margin-end: 12;
 
-      start-child: Frame {
+      Frame {
+        hexpand: true;
+
         child: Adw.PreferencesPage proc_page {
           title: _("Procedural Generator Input");
-          // TODO: Add a proper description
-          description: _("To generate a procedural, TODO");
 
           Adw.PreferencesGroup proc_group {
             title: _("Procedural");
-            description: _("An Alter Ego Procedural");
+            description: _("An Alter Ego procedural.");
 
             header-suffix: Button proc_clear_btn {
               styles [
                 "destructive-action",
               ]
 
-              label: _("Clear Procedural");
               has-frame: false;
               clicked => $on_proc_clear_btn_clicked(template);
 
@@ -61,7 +62,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
             }
 
             Adw.SwitchRow proc_chance_enabled {
-              title: _("Enable Chance");
+              title: _("Has Chance");
               subtitle: _("Enable to set a chance for the procedural");
             }
 
@@ -85,7 +86,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
 
           Adw.PreferencesGroup poss_group {
             title: _("Possibilities");
-            description: _("A Procedural can have multiple possibilities");
+            description: _("Procedurals can have multiple possibilites.");
 
             header-suffix: Button proc_poss_add_btn {
               label: _("Add Possibility");
@@ -108,8 +109,10 @@ template $AETContentProcedural: Adw.BreakpointBin {
           }
 
           Adw.PreferencesGroup action_group {
-            title: _("Generate Procedural");
-            description: _("Generate procedurals here");
+            title: _("Generate");
+            description: _(
+              "To generate possible names and containing phrases, the procedural must be named and at least one possibility must be named. A pattern with {} as placeholders must be provided as well."
+            );
 
             Adw.EntryRow poss_pattern {
               title: _("Possible Pattern");
@@ -118,7 +121,7 @@ template $AETContentProcedural: Adw.BreakpointBin {
             Adw.ComboRow poss_flag {
               title: _("Replacement Flag");
               // TODO: Write subtitle for what this does
-              subtitle: _("");
+              subtitle: _("What to transform pattern placeholders with");
 
               model: StringList {
                 strings [
@@ -145,9 +148,49 @@ template $AETContentProcedural: Adw.BreakpointBin {
             }
           }
         };
-      };
+      }
 
-      end-child: Frame {};
+      Frame {
+        hexpand: true;
+
+        child: Box {
+          orientation: vertical;
+
+          ScrolledWindow {
+            vexpand: true;
+
+            child: GtkSource.View source_view {
+              tab-width: 4;
+              auto-indent: true;
+              wrap-mode: word;
+              monospace: true;
+              // show-line-numbers: true;
+              // highlight-current-line: true;
+              buffer: GtkSource.Buffer source_buffer {
+                highlight-syntax: true;
+              };
+            };
+          }
+
+          Box {
+            styles [
+              "toolbar",
+            ]
+
+            orientation: horizontal;
+            halign: end;
+
+            Button poss_copy_btn {
+              clicked => $on_poss_copy_btn_clicked(template);
+
+              Adw.ButtonContent {
+                label: _("Copy");
+                icon-name: "edit-copy-symbolic";
+              }
+            }
+          }
+        };
+      }
     }
   };
 }

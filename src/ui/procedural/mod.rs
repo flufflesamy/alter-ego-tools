@@ -1,29 +1,30 @@
 mod possibility;
 mod possibility_data;
 
+// Re-exports for parent module
+pub(crate) use possibility::ProceduralPossibility;
+pub(crate) use possibility_data::PossibilityData;
+
+use std::cell::RefCell;
+
+use anyhow::{Result, bail};
+use tracing::*;
+
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use adw::{ButtonRow, ComboRow, EntryRow, SpinRow, SwitchRow};
-use anyhow::{Result, bail};
-use gtk::gio::ListStore;
-use gtk::glib;
 use gtk::{
     Button, ListBox, StringObject,
-    glib::{clone, closure_local},
+    gio::ListStore,
+    glib::{self, clone, closure_local},
 };
-use std::cell::RefCell;
-use tracing::error;
+use sourceview5::prelude::*;
 
 use crate::tools::procedural::*;
-use crate::ui::procedural::possibility::ProceduralPossibility;
-use crate::ui::procedural::possibility_data::*;
 use crate::utils::macros::ok_or;
 use crate::utils::output_clipboard;
 
 mod imp {
-
-    use crate::ui::procedural;
-
     use super::*;
 
     #[derive(Default, Debug, gtk::CompositeTemplate)]
@@ -54,6 +55,10 @@ mod imp {
         names_generate_btn: TemplateChild<ButtonRow>,
         #[template_child]
         containing_phrases_generate_btn: TemplateChild<ButtonRow>,
+        #[template_child]
+        source_view: TemplateChild<sourceview5::View>,
+        #[template_child]
+        source_buffer: TemplateChild<sourceview5::Buffer>,
     }
 
     #[glib::object_subclass]
@@ -77,6 +82,7 @@ mod imp {
             self.parent_constructed();
 
             self.setup_possibilities();
+            self.setup_source_view();
         }
     }
 
@@ -144,6 +150,31 @@ mod imp {
                     }
                 ),
             );
+        }
+
+        fn setup_source_view(&self) {
+            let buffer = self.source_buffer.get();
+
+            // Pick style scheme based on system color scheme
+            let scheme_name = if adw::StyleManager::default().is_dark() {
+                "Adwaita-dark"
+            } else {
+                "Adwaita"
+            };
+
+            // Set up the source view with Adwaita style scheme
+            if let Some(ref scheme) = sourceview5::StyleSchemeManager::new().scheme(scheme_name) {
+                buffer.set_style_scheme(Some(&scheme));
+            } else {
+                debug!("Style scheme not found");
+            }
+
+            // Set up language to XML
+            if let Some(ref language) = sourceview5::LanguageManager::new().language("xml") {
+                buffer.set_language(Some(&language));
+            } else {
+                debug!("Language not found");
+            }
         }
 
         fn build_procedural(&self) -> Result<Procedural> {
@@ -231,6 +262,12 @@ mod imp {
         fn on_proc_clear_btn_clicked(&self) {
             let model = self.get_poss();
             model.remove_all();
+            self.proc_name.set_text("");
+            self.proc_chance_enabled.set_active(false);
+            self.proc_chance.set_value(100.0);
+            self.proc_stat.set_selected(0);
+            self.poss_pattern.set_text("");
+            self.poss_flag.set_selected(0);
         }
         #[template_callback]
         fn on_poss_add_btn_clicked(&self) {
@@ -243,8 +280,7 @@ mod imp {
             let procedural = self.generate_procedural();
             match procedural {
                 Ok(procedural) => {
-                    output_clipboard(&procedural).expect("");
-                    self.show_toast("Copied");
+                    self.source_buffer.set_text(&procedural);
                 }
                 Err(e) => {
                     self.show_toast(&e.to_string());
@@ -256,11 +292,7 @@ mod imp {
             let names = self.generate_possible_names();
             match names {
                 Ok(names) => {
-                    if let Err(e) = output_clipboard(&names) {
-                        self.show_toast(&e.to_string());
-                    } else {
-                        self.show_toast("Copied");
-                    }
+                    self.source_buffer.set_text(&names);
                 }
                 Err(e) => {
                     self.show_toast(&e.to_string());
@@ -272,13 +304,19 @@ mod imp {
             let phrases = self.generate_possible_phrases();
 
             match phrases {
-                Ok(p) => {
-                    output_clipboard(&p).expect("Could not output to clipboard");
-                }
+                Ok(p) => self.source_buffer.set_text(&p),
                 Err(e) => {
-                    error!("Could not generate phrases: {e}");
                     self.show_toast(&e.to_string());
                 }
+            }
+        }
+        #[template_callback]
+        fn on_poss_copy_btn_clicked(&self) {
+            let buffer = self.source_buffer.get();
+            let text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
+            match output_clipboard(text.as_str()) {
+                Ok(_) => self.show_toast("Copied"),
+                Err(_) => self.show_toast("Could not copy to clipboard"),
             }
         }
     }

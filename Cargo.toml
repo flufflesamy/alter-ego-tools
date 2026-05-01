@@ -26,3 +26,4 @@ itertools = "0.14.0"
 # GTK
 gtk = { version = "0.11", package = "gtk4", features = ["gnome_50", "blueprint"] }
 adw = { version = "0.9", package = "libadwaita", features = ["v1_9"] }
+sourceview5 = "0.11"

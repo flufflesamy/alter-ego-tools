@@ -1,3 +1,4 @@
+#![allow(unused_macros)]
 /// Wrapper around [`Option::ok_or_else`] with error message
 ///
 /// Transforms `Option<T>` to `Result<T, E>`.
@@ -37,4 +38,3 @@ macro_rules! error_toast {
 }
 
 pub(crate) use ok_or;
-pub(crate) use toast;

@@ -1,13 +1,18 @@
 # Alter Ego Tools
 
-![app icon](data/icons/me.amypoon.AlterEgoTools.svg)
-Tools for Alter Ego moderators.
+Tools for [Alter Ego](https://github.com/MolSnoo/Alter-Ego) moderators.
+
+Alter Ego Tools provides a set of utilities to help moderators of Alter Ego, an open-source Discord bot that facilitates an in-depth, multiplayer text adventure role-playing game.
 
 ## Features
 
 ### Description Formatter
 
-Turns plain text into Alter Ego XML descriptions.
+Converts plain text into Alter Ego XML descriptions.
+
+### Procedural Generator
+
+Creates Alter Ego procedurals and containing phrases.
 
 ## Screenshots
 

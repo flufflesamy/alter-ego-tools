@@ -44,6 +44,6 @@ impl PossibilityData {
 
 impl Default for PossibilityData {
     fn default() -> Self {
-        Self::new(String::new(), 0.0, false)
+        Self::new(String::new(), 100.0, false)
     }
 }

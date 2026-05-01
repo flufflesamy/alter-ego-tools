@@ -87,26 +87,6 @@ impl Procedural {
         ProceduralBuilder::default()
     }
 
-    /// Returns a reference to the optional name of the procedural.
-    pub fn name(&self) -> &Option<String> {
-        &self.name
-    }
-
-    /// Returns a reference to the optional chance value of the procedural.
-    pub fn chance(&self) -> &Option<f64> {
-        &self.chance
-    }
-
-    /// Returns a reference to the optional stat associated with the procedural.
-    pub fn stat(&self) -> &Option<Stat> {
-        &self.stat
-    }
-
-    /// Returns a reference to the vector of possibilities (name, chance) tuples.
-    pub fn possibilities(&self) -> &Vec<Possibility> {
-        &self.possibilities
-    }
-
     /// Generates Alter Ego procedural string.
     ///
     /// Uses the fields of the Procedural struct to generate a string.
@@ -164,12 +144,12 @@ impl Procedural {
         // Turn possibilities into tags
         let possibilities_tags: Vec<String> = self
             .get_named_possibilities()?
-            .into_iter()
+            .iter()
             .map(|p| self.to_possible_name_tag(name, &p, flag))
             .collect();
 
         // Join tags into string
-        Ok(self.join_tags(possibilities_tags))
+        Ok(possibilities_tags.join(", "))
     }
 
     /// Generates Alter Ego possible containing phrases string.
@@ -208,10 +188,10 @@ impl Procedural {
             .ok_or(anyhow!("Procedural must have name."))?;
         let possibilities_tags: Vec<String> = self
             .get_named_possibilities()?
-            .into_iter()
+            .iter()
             .map(|p| self.to_possible_phrase_tag(name, &p, pattern, flag))
             .collect();
-        Ok(self.join_tags(possibilities_tags))
+        Ok(possibilities_tags.join(", "))
     }
 
     /// Generates the opening `<procedural ...>` tag including optional
@@ -230,10 +210,10 @@ impl Procedural {
     /// Generates the `<poss ...>name</poss>` tags for each possibility.
     fn generate_poss_tags(&self) -> String {
         let mut poss_string: Vec<String> = Vec::new();
-        for (name, chance) in self.possibilities() {
+        for (name, chance) in self.possibilities.clone() {
             let mut tag: Vec<String> = Vec::new();
-            let name_string = self.to_attribute("name", name);
-            let chance_string = self.to_attribute("chance", chance);
+            let name_string = self.to_attribute("name", &name);
+            let chance_string = self.to_attribute("chance", &chance);
 
             // Push opening tag
             tag.push(self.to_attribute_tag("poss", vec![name_string, chance_string]));
@@ -319,24 +299,6 @@ impl Procedural {
         }
     }
 
-    /// Joins a list of tag strings into a single string, separated by `", "`.
-    fn join_tags(&self, tags: Vec<String>) -> String {
-        let len = tags.len();
-        tags.iter()
-            .enumerate()
-            .map(|(i, s)| {
-                // If tag is not last tag
-                if i != len - 1 {
-                    // Add comma
-                    s.to_owned() + ", "
-                } else {
-                    // Leave last tag as is
-                    s.to_owned()
-                }
-            })
-            .collect::<String>()
-    }
-
     /// Returns a vector of names from possibilities that have a name set.
     ///
     /// Bails with an error if no possibility has a name.
@@ -344,9 +306,8 @@ impl Procedural {
         // filter into where name is present and discard chance
         let some: Vec<String> = self
             .possibilities
-            .clone()
-            .into_iter()
-            .filter_map(|(name, _)| name)
+            .iter()
+            .filter_map(|(name, _)| name.clone())
             .collect();
         // If no possibilities are named, bail
         if some.is_empty() {

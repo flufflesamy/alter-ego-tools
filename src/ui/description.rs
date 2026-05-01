@@ -1,7 +1,8 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
-use tracing::error;
+use sourceview5::prelude::*;
+use tracing::*;
 
 use crate::tools::description::str_to_description;
 
@@ -12,9 +13,13 @@ mod imp {
     #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/description.ui")]
     pub struct AETContentDescription {
         #[template_child]
-        pub(super) input_text: TemplateChild<gtk::TextView>,
+        pub(super) input_text: TemplateChild<sourceview5::View>,
         #[template_child]
-        pub(super) output_text: TemplateChild<gtk::TextView>,
+        pub(super) output_text: TemplateChild<sourceview5::View>,
+        #[template_child]
+        input_buffer: TemplateChild<sourceview5::Buffer>,
+        #[template_child]
+        output_buffer: TemplateChild<sourceview5::Buffer>,
     }
 
     #[glib::object_subclass]
@@ -33,7 +38,12 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for AETContentDescription {}
+    impl ObjectImpl for AETContentDescription {
+        fn constructed(&self) {
+            self.parent_constructed();
+            self.setup_source_view();
+        }
+    }
 
     impl WidgetImpl for AETContentDescription {}
 
@@ -45,6 +55,42 @@ mod imp {
             self.obj()
                 .activate_action("win.show-toast", Some(&message.to_variant()))
                 .map_or_else(|e| error!("Could not show toast: {e}."), |_| ());
+        }
+
+        fn setup_source_view(&self) {
+            let input_buffer = self.input_buffer.get();
+            let output_buffer = self.output_buffer.get();
+
+            // Pick style scheme based on system color scheme
+            let scheme_name = if adw::StyleManager::default().is_dark() {
+                "Adwaita-dark"
+            } else {
+                "Adwaita"
+            };
+
+            // Set up the source view with Adwaita style scheme
+            if let Some(ref scheme) = sourceview5::StyleSchemeManager::new().scheme(scheme_name) {
+                input_buffer.set_style_scheme(Some(&scheme));
+                output_buffer.set_style_scheme(Some(&scheme));
+            } else {
+                debug!("Style scheme not found");
+            }
+
+            let language_mananger = sourceview5::LanguageManager::new();
+
+            // Set up input language to markdown
+            if let Some(ref language) = language_mananger.language("markdown") {
+                input_buffer.set_language(Some(&language));
+            } else {
+                debug!("Language not found");
+            }
+
+            // Set up  language to XML
+            if let Some(ref language) = language_mananger.language("xml") {
+                output_buffer.set_language(Some(&language));
+            } else {
+                debug!("Language not found");
+            }
         }
 
         fn generate_description(&self) {

@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Adw 1;
+using GtkSource 5;
 
 template $AETContentDescription: Adw.BreakpointBin {
   vexpand: true;
@@ -9,95 +10,147 @@ template $AETContentDescription: Adw.BreakpointBin {
     [top]
     Adw.HeaderBar header_bar {}
 
-    [bottom]
-    ActionBar action_bar {
-      [start]
-      Button import_button {
-        clicked => $on_import_button_clicked(template);
-
-        child: Adw.ButtonContent {
-          label: _("Paste");
-          icon-name: "edit-paste-symbolic";
-        };
-      }
-
-      [start]
-      Button generate_button {
-        clicked => $on_generate_button_clicked(template);
-
-        child: Adw.ButtonContent {
-          label: _("Generate");
-          icon-name: "arrow-into-box-symbolic";
-        };
-      }
-
-      [end]
-      Button copy_button {
-        clicked => $on_copy_button_clicked(template);
-
-        child: Adw.ButtonContent {
-          label: _("Copy");
-          icon-name: "edit-copy-symbolic";
-        };
-      }
-    }
-
     content: Box {
-      orientation: horizontal;
-      spacing: 12;
-      margin-top: 12;
+      homogeneous: true;
       margin-start: 12;
       margin-end: 12;
+      margin-bottom: 12;
 
-      Box {
-        orientation: vertical;
-        vexpand: true;
+      Frame {
         hexpand: true;
-        spacing: 10;
 
-        Label {
-          styles [
-            "description",
-          ]
-
-          label: _("Input");
-        }
-
-        ScrolledWindow {
+        child: Box {
+          orientation: vertical;
           vexpand: true;
-          hscrollbar-policy: never;
+          hexpand: true;
 
-          TextView input_text {
-            monospace: true;
-            wrap-mode: word;
+          Box {
+            styles [
+              "toolbar",
+            ]
+
+            halign: center;
+
+            Label {
+              styles [
+                "heading",
+              ]
+
+              label: _("Input");
+            }
           }
-        }
+
+          ScrolledWindow {
+            vexpand: true;
+            hscrollbar-policy: never;
+
+            child: GtkSource.View input_text {
+              monospace: true;
+              wrap-mode: word;
+              tab-width: 4;
+              auto-indent: true;
+              show-line-numbers: true;
+              highlight-current-line: true;
+
+              buffer: GtkSource.Buffer input_buffer {
+                highlight-syntax: true;
+                highlight-matching-brackets: true;
+              };
+            };
+          }
+
+          Box input_toolbar {
+            styles [
+              "toolbar",
+            ]
+
+            Button import_button {
+              clicked => $on_import_button_clicked(template);
+
+              child: Adw.ButtonContent {
+                label: _("Paste");
+                icon-name: "edit-paste-symbolic";
+              };
+            }
+
+            Separator {
+              styles [
+                "spacer",
+              ]
+
+              hexpand: true;
+            }
+
+            Button generate_button {
+              clicked => $on_generate_button_clicked(template);
+
+              child: Adw.ButtonContent {
+                label: _("Generate");
+                icon-name: "arrow-into-box-symbolic";
+              };
+            }
+          }
+        };
       }
 
-      Box {
-        orientation: vertical;
-        vexpand: true;
+      Frame {
         hexpand: true;
-        spacing: 10;
 
-        Label {
-          styles [
-            "description",
-          ]
-
-          label: _("Output");
-        }
-
-        ScrolledWindow {
+        child: Box {
+          orientation: vertical;
           vexpand: true;
-          hscrollbar-policy: never;
+          hexpand: true;
 
-          TextView output_text {
-            editable: false;
-            monospace: true;
-            wrap-mode: word;
+          Box {
+            styles [
+              "toolbar",
+            ]
+
+            halign: center;
+
+            Label {
+              styles [
+                "heading",
+              ]
+
+              label: _("Output");
+            }
           }
-        }
+
+          ScrolledWindow {
+            vexpand: true;
+            hscrollbar-policy: never;
+
+            child: GtkSource.View output_text {
+              monospace: true;
+              wrap-mode: word;
+              tab-width: 2;
+              auto-indent: true;
+
+              buffer: GtkSource.Buffer output_buffer {
+                highlight-syntax: true;
+                highlight-matching-brackets: true;
+              };
+            };
+          }
+
+          Box {
+            styles [
+              "toolbar",
+            ]
+
+            halign: end;
+
+            Button copy_button {
+              clicked => $on_copy_button_clicked(template);
+
+              child: Adw.ButtonContent {
+                label: _("Copy");
+                icon-name: "edit-copy-symbolic";
+              };
+            }
+          }
+        };
       }
     };
   };

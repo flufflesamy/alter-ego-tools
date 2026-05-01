@@ -16,7 +16,7 @@
 macro_rules! ok_or {
     ($e:expr, $msg:literal) => {
         $e.ok_or_else(|| {
-            error!("{}", $msg);
+            tracing::error!("{}", $msg);
             anyhow::anyhow!($msg)
         })
     };

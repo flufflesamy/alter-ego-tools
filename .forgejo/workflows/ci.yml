@@ -43,5 +43,6 @@ jobs:
           bundle: ${{ matrix.bundle }}
           manifest-path: ${{ matrix.manifest }}
           run-tests: true
+          upload-artifact: false
           cache-key: flatpak-builder-${{ matrix.profile }}-${{ hashFiles('build-aux/**',
             'Cargo.lock') }}

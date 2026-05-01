@@ -1,7 +1,7 @@
 [package]
 name = "alter-ego-tools"
 version = "0.1.0"
-authors = ["Amy Poon <amy@amypoon.me>"]
+authors = ["flufflesamy <amy@amypoon.me>"]
 license = "GPL-3.0-or-later"
 edition = "2024"
 rust-version = "1.92"

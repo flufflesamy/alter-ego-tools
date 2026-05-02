@@ -1,0 +1,41 @@
+version = 1
+
+# Source Code
+[[annotations]]
+path = ["src/**/*.rs", "data/resources/ui/*"]
+SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# Metadata
+[[annotations]]
+path = ["build-aux/**.json", "data/**.in"]
+SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
+SPDX-License-Identifier = "CC0-1.0"
+
+# Trnaslation Metadata
+path = ["po/LINGUAS", "po/POTFILES.in"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
+SPDX-License-Identifier = "CC0-1.0"
+
+# Translations
+[[annotations]]
+path = "po/**.po"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Translation Authors"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# Generated Files
+[[annotations]]
+path = ["Cargo.lock"]
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"
+
+# Meson Build
+[[annotations]]
+path = "meson.build"
+SPDX-FileCopyrightText = [
+    "2019 Bilal Elmoussaoui",
+    "2026 Amy Poon <amy@amypoon.me>"
+]
+SPDX-License-Identifier = "GPL-3.0-or-later"

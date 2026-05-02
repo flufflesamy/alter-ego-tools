@@ -21,8 +21,8 @@ use gtk::{
 use sourceview5::prelude::*;
 
 use crate::tools::procedural::*;
-use crate::utils::macros::ok_or;
-use crate::utils::output_clipboard;
+use crate::utils::macros::*;
+use crate::utils::*;
 
 mod imp {
     use super::*;
@@ -152,28 +152,14 @@ mod imp {
         }
 
         fn setup_source_view(&self) {
+            let manager = adw::StyleManager::default();
             let buffer = self.source_buffer.get();
 
-            // Pick style scheme based on system color scheme
-            let scheme_name = if adw::StyleManager::default().is_dark() {
-                "Adwaita-dark"
-            } else {
-                "Adwaita"
-            };
-
-            // Set up the source view with Adwaita style scheme
-            if let Some(ref scheme) = sourceview5::StyleSchemeManager::new().scheme(scheme_name) {
-                buffer.set_style_scheme(Some(scheme));
-            } else {
-                debug!("Style scheme not found");
-            }
+            // Set buffer to match system theme
+            buffer_color(&manager, &buffer);
 
             // Set up language to XML
-            if let Some(ref language) = sourceview5::LanguageManager::new().language("xml") {
-                buffer.set_language(Some(language));
-            } else {
-                debug!("Language not found");
-            }
+            buffer_language(&buffer, "xml");
         }
 
         fn build_procedural(&self) -> Result<Procedural> {

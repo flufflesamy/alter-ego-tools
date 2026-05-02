@@ -5,6 +5,7 @@ use sourceview5::prelude::*;
 use tracing::*;
 
 use crate::tools::description::str_to_description;
+use crate::utils::*;
 
 mod imp {
     use super::*;
@@ -58,39 +59,15 @@ mod imp {
         }
 
         fn setup_source_view(&self) {
+            let manager = adw::StyleManager::default();
             let input_buffer = self.input_buffer.get();
             let output_buffer = self.output_buffer.get();
 
-            // Pick style scheme based on system color scheme
-            let scheme_name = if adw::StyleManager::default().is_dark() {
-                "Adwaita-dark"
-            } else {
-                "Adwaita"
-            };
+            buffer_color(&manager, &input_buffer);
+            buffer_color(&manager, &output_buffer);
 
-            // Set up the source view with Adwaita style scheme
-            if let Some(ref scheme) = sourceview5::StyleSchemeManager::new().scheme(scheme_name) {
-                input_buffer.set_style_scheme(Some(scheme));
-                output_buffer.set_style_scheme(Some(scheme));
-            } else {
-                debug!("Style scheme not found");
-            }
-
-            let language_mananger = sourceview5::LanguageManager::new();
-
-            // Set up input language to markdown
-            if let Some(ref language) = language_mananger.language("markdown") {
-                input_buffer.set_language(Some(language));
-            } else {
-                debug!("Language not found");
-            }
-
-            // Set up  language to XML
-            if let Some(ref language) = language_mananger.language("xml") {
-                output_buffer.set_language(Some(language));
-            } else {
-                debug!("Language not found");
-            }
+            buffer_language(&input_buffer, "markdown");
+            buffer_language(&output_buffer, "xml");
         }
 
         fn generate_description(&self) {

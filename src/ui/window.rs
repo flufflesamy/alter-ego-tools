@@ -5,8 +5,8 @@ use gtk::{gio, glib};
 use crate::application::AEToolsApp;
 use crate::config::{APP_ID, PROFILE};
 
-use crate::ui::Theme;
 use crate::ui::content::Content;
+use crate::ui::preferences::Theme;
 use crate::ui::sidebar::Sidebar;
 
 mod imp {
@@ -17,13 +17,13 @@ mod imp {
     #[derive(Default, Debug, gtk::CompositeTemplate)]
     #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/window.ui")]
     pub struct AETApplicationWindow {
-        pub settings: OnceCell<gio::Settings>,
+        settings: OnceCell<gio::Settings>,
         #[template_child]
-        pub split_view: TemplateChild<adw::NavigationSplitView>,
+        pub(super) split_view: TemplateChild<adw::NavigationSplitView>,
         #[template_child]
-        pub sidebar: TemplateChild<Sidebar>,
+        pub(super) sidebar: TemplateChild<Sidebar>,
         #[template_child]
-        pub content: TemplateChild<Content>,
+        pub(super) content: TemplateChild<Content>,
     }
 
     #[glib::object_subclass]
@@ -51,10 +51,10 @@ mod imp {
                 obj.add_css_class("devel");
             }
 
-            obj.setup_settings();
+            self.setup_settings();
             obj.setup_actions();
             obj.set_settings();
-            obj.init_sidebar();
+            self.init_sidebar();
         }
     }
 
@@ -65,6 +65,28 @@ mod imp {
     impl ApplicationWindowImpl for AETApplicationWindow {}
 
     impl AdwApplicationWindowImpl for AETApplicationWindow {}
+
+    impl AETApplicationWindow {
+        pub fn settings(&self) -> &gio::Settings {
+            self.settings
+                .get()
+                .expect("`settings` should be set in `setup_settings`.")
+        }
+
+        fn setup_settings(&self) {
+            let settings = gio::Settings::new(*APP_ID);
+            self.settings
+                .set(settings)
+                .expect("`settings` should not be set before calling `setup_settings`.");
+        }
+
+        fn init_sidebar(&self) {
+            let sidebar = self.sidebar.get().imp().sidebar.get();
+            let stack = self.content.get().imp().stack.get();
+
+            sidebar.set_stack(Some(&stack));
+        }
+    }
 }
 
 glib::wrapper! {
@@ -106,26 +128,44 @@ impl AETApplicationWindow {
             })
             .build();
 
-        self.add_action_entries([show_toast, sidebar_activated, set_color_scheme]);
-    }
+        let increment_view_font_size = gio::ActionEntry::builder("increment-view-font-size")
+            .parameter_type(Some(&i32::static_variant_type()))
+            .activate(move |win: &Self, _, param| {
+                let size = param.map_or(0, |s| s.get::<i32>().unwrap_or(0));
+                win.imp().content.increment_font_size(size);
+            })
+            .build();
 
-    fn setup_settings(&self) {
-        let settings = gio::Settings::new(*APP_ID);
-        self.imp()
-            .settings
-            .set(settings)
-            .expect("`settings` should not be set before calling `setup_settings`.");
-    }
+        let decrement_view_font_size = gio::ActionEntry::builder("decrement-view-font-size")
+            .parameter_type(Some(&i32::static_variant_type()))
+            .activate(move |win: &Self, _, param| {
+                let size = param.map_or(0, |s| s.get::<i32>().unwrap_or(0));
+                win.imp().content.decrement_font_size(size);
+            })
+            .build();
 
-    fn settings(&self) -> &gio::Settings {
-        self.imp()
-            .settings
-            .get()
-            .expect("`settings` should be set in `setup_settings`.")
+        let change_view_font = gio::ActionEntry::builder("change-view-font")
+            .parameter_type(Some(&String::static_variant_type()))
+            .activate(move |win: &Self, _, param| {
+                let size = param.map_or(String::new(), |s| {
+                    s.get::<String>().unwrap_or(String::new())
+                });
+                win.imp().content.change_view_font(&size);
+            })
+            .build();
+
+        self.add_action_entries([
+            show_toast,
+            sidebar_activated,
+            set_color_scheme,
+            increment_view_font_size,
+            decrement_view_font_size,
+            change_view_font,
+        ]);
     }
 
     fn set_settings(&self) {
-        let settings = self.settings();
+        let settings = self.imp().settings();
 
         settings.bind("window-width", self, "default-width").build();
         settings
@@ -136,12 +176,5 @@ impl AETApplicationWindow {
         // Get setting and set chooser
         let theme: Theme = settings.string("theme").as_str().into();
         adw::StyleManager::default().set_color_scheme(theme.into());
-    }
-
-    fn init_sidebar(&self) {
-        let sidebar = self.imp().sidebar.get().imp().sidebar.get();
-        let stack = self.imp().content.get().imp().stack.get();
-
-        sidebar.set_stack(Some(&stack));
     }
 }

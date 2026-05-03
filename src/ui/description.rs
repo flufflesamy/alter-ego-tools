@@ -4,6 +4,7 @@ use gtk::{gdk, gio, glib};
 use tracing::*;
 
 use crate::tools::description::str_to_description;
+use crate::utils::macros::*;
 use crate::utils::*;
 
 mod imp {
@@ -51,12 +52,6 @@ mod imp {
 
     #[gtk::template_callbacks]
     impl AETContentDescription {
-        pub(super) fn show_toast(&self, message: &str) {
-            self.obj()
-                .activate_action("win.show-toast", Some(&message.to_variant()))
-                .map_or_else(|e| error!("Could not show toast: {e}."), |_| ());
-        }
-
         fn setup_source_view(&self) {
             let manager = adw::StyleManager::default();
             let input_buffer = self.input_buffer.get();
@@ -80,11 +75,10 @@ mod imp {
             match converted {
                 Ok(res) => {
                     output_buffer.set_text(&res);
-                    self.show_toast("Generated description.");
+                    toast!(self.obj(), "Generated description.");
                 }
                 Err(e) => {
-                    error!("Cannot generate description: {e}.");
-                    self.show_toast("Error: Cannot generate description.");
+                    toast_error!(self.obj(), "Cannot generate description", e);
                 }
             }
         }
@@ -98,14 +92,10 @@ mod imp {
                     false,
                 )
                 .to_string();
-            let display = gdk::Display::default();
 
-            if let Some(display) = display {
-                let clipboard = gdk::Display::clipboard(&display);
-                gdk::Clipboard::set_text(&clipboard, &output_text);
-                self.show_toast("Output copied to clipboard.");
-            } else {
-                self.show_toast("Error: Could not copy output to clipboard.");
+            match output_clipboard(&output_text) {
+                Ok(()) => toast!(self.obj(), "Output copied to clipboard."),
+                Err(e) => toast_error!(self.obj(), "Could not copy output to clipboard", e),
             }
         }
 
@@ -121,24 +111,27 @@ mod imp {
                         #[weak(rename_to = desc)]
                         self,
                         move |res| {
-                            if let Ok(clipboard) = res {
-                                let string = clipboard.unwrap().to_string();
-                                desc.clipboard_to_input_done(string);
-                            } else {
-                                desc.show_toast("Error: Could not read clipboard.");
+                            match res {
+                                Ok(clipboard) => {
+                                    let string = clipboard.unwrap().to_string();
+                                    desc.clipboard_to_input_done(string);
+                                }
+                                Err(e) => {
+                                    toast_error!(desc.obj(), "Could not read clipboard", e);
+                                }
                             }
                         }
                     ),
                 );
             } else {
-                self.show_toast("Error: Could not read clipboard.");
+                toast!(self.obj(), "Error: Could not read clipboard.");
             }
         }
 
         fn clipboard_to_input_done(&self, text: String) {
             let input_buffer = &self.input_text.buffer();
             input_buffer.set_text(&text);
-            self.show_toast("Pasted text to input.");
+            toast!(self.obj(), "Pasted text to input.");
         }
 
         #[template_callback]

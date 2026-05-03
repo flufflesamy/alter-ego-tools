@@ -1,6 +1,4 @@
-pub mod theme;
-
-pub use theme::*;
+mod theme;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
@@ -9,6 +7,8 @@ use std::cell::OnceCell;
 use tracing::*;
 
 use crate::config::APP_ID;
+
+pub(crate) use theme::Theme;
 
 mod imp {
 

@@ -7,26 +7,6 @@ use tracing::warn;
 use crate::ui::description::Description;
 use crate::ui::procedural::ContentProcedural;
 
-// #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-// pub enum ContentPage {
-//     Description,
-// }
-
-// impl ContentPage {
-//     const fn name(self) -> &'static str {
-//         match self {
-//             Self::Description => "description",
-//         }
-//     }
-
-//     fn from_name(name: &str) -> Self {
-//         match name {
-//             "description" => Self::Description,
-//             _ => panic!("Unknown ContentPage: {name}"),
-//         }
-//     }
-// }
-
 mod imp {
     use super::*;
 
@@ -74,15 +54,6 @@ mod imp {
 
     #[gtk::template_callbacks]
     impl AETContent {
-        // pub fn current_page(&self) -> ContentPage {
-        //     ContentPage::from_name(
-        //         &self
-        //             .stack
-        //             .visible_child_name()
-        //             .expect("Content should always have a page"),
-        //     )
-        // }
-
         fn current_page(&self) -> Option<ViewStackPage> {
             self.stack
                 .visible_child()
@@ -131,5 +102,17 @@ glib::wrapper! {
 impl Content {
     pub(crate) fn show_toast(&self, msg: &str) {
         self.imp().show_toast(msg);
+    }
+
+    pub fn increment_font_size(&self, size: i32) {
+        todo!()
+    }
+
+    pub fn decrement_font_size(&self, size: i32) {
+        todo!()
+    }
+
+    pub fn change_view_font(&self, font_string: &str) {
+        todo!()
     }
 }

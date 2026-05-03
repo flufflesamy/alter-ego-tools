@@ -91,12 +91,6 @@ mod imp {
 
     #[gtk::template_callbacks]
     impl AETContentProcedural {
-        fn show_toast(&self, message: &str) {
-            self.obj()
-                .activate_action("win.show-toast", Some(&message.to_variant()))
-                .map_or_else(|e| error!("Could not show toast: {e}."), |_| ());
-        }
-
         fn get_poss(&self) -> ListStore {
             // Get state
             self.possibilities
@@ -267,7 +261,7 @@ mod imp {
                     self.source_buffer.set_text(&procedural);
                 }
                 Err(e) => {
-                    self.show_toast(&e.to_string());
+                    toast_error!(self.obj(), "Could not generate procedural", e);
                 }
             }
         }
@@ -279,7 +273,7 @@ mod imp {
                     self.source_buffer.set_text(&names);
                 }
                 Err(e) => {
-                    self.show_toast(&e.to_string());
+                    toast_error!(self.obj(), "Could not generate possible names", e);
                 }
             }
         }
@@ -290,7 +284,7 @@ mod imp {
             match phrases {
                 Ok(p) => self.source_buffer.set_text(&p),
                 Err(e) => {
-                    self.show_toast(&e.to_string());
+                    toast_error!(self.obj(), "Could not generate possible phrases", e);
                 }
             }
         }
@@ -299,8 +293,8 @@ mod imp {
             let buffer = self.source_buffer.get();
             let text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
             match output_clipboard(text.as_str()) {
-                Ok(_) => self.show_toast("Copied"),
-                Err(_) => self.show_toast("Could not copy to clipboard"),
+                Ok(()) => toast!(self.obj(), "Copied"),
+                Err(e) => toast_error!(self.obj(), "Could not copy to clipboard", e),
             }
         }
     }

@@ -4,5 +4,3 @@ pub mod preferences;
 pub mod procedural;
 pub mod sidebar;
 pub mod window;
-
-pub(crate) use preferences::theme::*;

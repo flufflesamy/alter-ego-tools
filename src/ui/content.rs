@@ -2,6 +2,7 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use adw::{NavigationPage, Toast, ToastOverlay, ViewStack, ViewStackPage};
 use gtk::glib;
+use gtk::pango::FontDescription;
 use tracing::warn;
 
 use crate::ui::description::Description;
@@ -17,9 +18,9 @@ mod imp {
         #[template_child]
         pub stack: TemplateChild<ViewStack>,
         #[template_child]
-        description: TemplateChild<Description>,
+        pub(crate) description: TemplateChild<Description>,
         #[template_child]
-        procedural: TemplateChild<ContentProcedural>,
+        pub(crate) procedural: TemplateChild<ContentProcedural>,
         #[template_child]
         toast_overlay: TemplateChild<ToastOverlay>,
     }
@@ -102,17 +103,5 @@ glib::wrapper! {
 impl Content {
     pub(crate) fn show_toast(&self, msg: &str) {
         self.imp().show_toast(msg);
-    }
-
-    pub fn increment_font_size(&self, size: i32) {
-        todo!()
-    }
-
-    pub fn decrement_font_size(&self, size: i32) {
-        todo!()
-    }
-
-    pub fn change_view_font(&self, font_string: &str) {
-        todo!()
     }
 }

@@ -14,9 +14,9 @@ mod imp {
     #[template(resource = "/com/flufflesamy/AlterEgoTools/ui/description.ui")]
     pub struct AETContentDescription {
         #[template_child]
-        pub(super) input_text: TemplateChild<sourceview5::View>,
+        pub(crate) input_text: TemplateChild<sourceview5::View>,
         #[template_child]
-        pub(super) output_text: TemplateChild<sourceview5::View>,
+        pub(crate) output_text: TemplateChild<sourceview5::View>,
         #[template_child]
         input_buffer: TemplateChild<sourceview5::Buffer>,
         #[template_child]

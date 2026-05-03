@@ -1,5 +1,6 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
+use anyhow::Result;
 use gtk::{gio, glib};
 
 use crate::application::AEToolsApp;
@@ -11,6 +12,8 @@ use crate::ui::sidebar::Sidebar;
 
 mod imp {
     use std::cell::OnceCell;
+
+    use crate::utils::{generate_font, set_view_font};
 
     use super::*;
 
@@ -53,21 +56,32 @@ mod imp {
 
             self.setup_settings();
             obj.setup_actions();
-            obj.set_settings();
+            self.load_window_state();
             self.init_sidebar();
+            self.update_view_font();
         }
     }
 
     impl WidgetImpl for AETApplicationWindow {}
 
-    impl WindowImpl for AETApplicationWindow {}
+    impl WindowImpl for AETApplicationWindow {
+        // Save window state on close
+        fn close_request(&self) -> glib::Propagation {
+            if let Err(err) = self.save_window_state() {
+                tracing::warn!("Failed to save window state: {}", err);
+            }
+
+            // Pass the close request to the parent
+            self.parent_close_request()
+        }
+    }
 
     impl ApplicationWindowImpl for AETApplicationWindow {}
 
     impl AdwApplicationWindowImpl for AETApplicationWindow {}
 
     impl AETApplicationWindow {
-        pub fn settings(&self) -> &gio::Settings {
+        pub(super) fn settings(&self) -> &gio::Settings {
             self.settings
                 .get()
                 .expect("`settings` should be set in `setup_settings`.")
@@ -85,6 +99,50 @@ mod imp {
             let stack = self.content.get().imp().stack.get();
 
             sidebar.set_stack(Some(&stack));
+        }
+
+        pub(super) fn load_window_state(&self) {
+            let settings = self.settings();
+
+            // Set window size
+            let width = settings.int("window-width");
+            let height = settings.int("window-height");
+            self.obj().set_default_size(width, height);
+
+            // Set maximized state
+            let maximized = settings.boolean("is-maximized");
+            self.obj().set_maximized(maximized);
+
+            // Set window theme from settings
+            let theme: Theme = settings.string("theme").as_str().into();
+            adw::StyleManager::default().set_color_scheme(theme.into());
+        }
+
+        pub(super) fn update_view_font(&self) {
+            let settings = self.settings();
+            let description = self.content.get().imp().description.get();
+            let procedural = self.content.get().imp().procedural.get();
+            let views = [
+                description.imp().input_text.get(),
+                description.imp().output_text.get(),
+                procedural.imp().source_view.get(),
+            ];
+
+            // Set view font
+            let font_family = settings.string("view-font-family");
+            let font_size = settings.int("view-font-size");
+            let font = generate_font(&font_family, font_size);
+            for view in views {
+                set_view_font(&view, &font).unwrap();
+            }
+        }
+
+        fn save_window_state(&self) -> Result<()> {
+            let settings = self.settings();
+            settings.set_int("window-width", self.obj().width())?;
+            settings.set_int("window-height", self.obj().height())?;
+            settings.set_boolean("is-maximized", self.obj().is_maximized())?;
+            Ok(())
         }
     }
 }
@@ -129,28 +187,55 @@ impl AETApplicationWindow {
             .build();
 
         let increment_view_font_size = gio::ActionEntry::builder("increment-view-font-size")
-            .parameter_type(Some(&i32::static_variant_type()))
-            .activate(move |win: &Self, _, param| {
-                let size = param.map_or(0, |s| s.get::<i32>().unwrap_or(0));
-                win.imp().content.increment_font_size(size);
+            .activate(move |win: &Self, _, _| {
+                let settings = win.imp().settings();
+                let font_size = settings.int("view-font-size");
+                settings
+                    .set_int("view-font-size", font_size + 1)
+                    .expect("Failed to increment font size");
+                win.imp().update_view_font();
             })
             .build();
 
         let decrement_view_font_size = gio::ActionEntry::builder("decrement-view-font-size")
-            .parameter_type(Some(&i32::static_variant_type()))
-            .activate(move |win: &Self, _, param| {
-                let size = param.map_or(0, |s| s.get::<i32>().unwrap_or(0));
-                win.imp().content.decrement_font_size(size);
+            .activate(move |win: &Self, _, _| {
+                let settings = win.imp().settings();
+                let font_size = settings.int("view-font-size");
+                settings
+                    .set_int("view-font-size", font_size - 1)
+                    .expect("Failed to increment font size");
+                win.imp().update_view_font();
             })
             .build();
 
-        let change_view_font = gio::ActionEntry::builder("change-view-font")
-            .parameter_type(Some(&String::static_variant_type()))
-            .activate(move |win: &Self, _, param| {
-                let size = param.map_or(String::new(), |s| {
-                    s.get::<String>().unwrap_or(String::new())
-                });
-                win.imp().content.change_view_font(&size);
+        let reset_view_font_size = gio::ActionEntry::builder("reset-view-font-size")
+            .activate(move |win: &Self, _, _| {
+                let settings = win.imp().settings();
+                settings.reset("view-font-size");
+                win.imp().update_view_font();
+            })
+            .build();
+
+        // let change_view_font = gio::ActionEntry::builder("change-view-font")
+        //     .parameter_type(Some(&String::static_variant_type()))
+        //     .activate(move |win: &Self, _, param| {
+        //         let font_string = param.map_or(String::new(), |s| {
+        //             s.get::<String>().unwrap_or(String::new())
+        //         });
+        //         let font = FontDescription::from_string(&font_string);
+        //         win.imp().content.change_view_font(&font);
+        //     })
+        //     .build();
+
+        let update_view_font = gio::ActionEntry::builder("update-view-font")
+            .activate(move |win: &Self, _, _| {
+                win.imp().update_view_font();
+            })
+            .build();
+
+        let load_window_state = gio::ActionEntry::builder("load-window-state")
+            .activate(move |win: &Self, _, _| {
+                win.imp().load_window_state();
             })
             .build();
 
@@ -160,21 +245,10 @@ impl AETApplicationWindow {
             set_color_scheme,
             increment_view_font_size,
             decrement_view_font_size,
-            change_view_font,
+            // change_view_font,
+            load_window_state,
+            update_view_font,
+            reset_view_font_size,
         ]);
-    }
-
-    fn set_settings(&self) {
-        let settings = self.imp().settings();
-
-        settings.bind("window-width", self, "default-width").build();
-        settings
-            .bind("window-height", self, "default-height")
-            .build();
-        settings.bind("is-maximized", self, "maximized").build();
-
-        // Get setting and set chooser
-        let theme: Theme = settings.string("theme").as_str().into();
-        adw::StyleManager::default().set_color_scheme(theme.into());
     }
 }

@@ -21,5 +21,13 @@
       </choices>
       <default>'System'</default>
     </key>
+    <key name="view-font-size" type="i">
+      <default>11</default>
+      <summary>View font size</summary>
+    </key>
+    <key name="view-font-family" type="s">
+      <default>'Adwaita Mono'</default>
+      <summary>View font family</summary>
+    </key>
   </schema>
 </schemalist>

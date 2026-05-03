@@ -4,6 +4,7 @@ use gtk::gdk::{self, prelude::DisplayExt};
 use gtk::glib;
 use gtk::pango::FontDescription;
 use sourceview5::{Buffer, View, prelude::*};
+use tracing::*;
 
 use crate::utils::macros::*;
 
@@ -62,8 +63,9 @@ pub fn set_view_font(view: &View, font: &FontDescription) -> Result<()> {
     view.remove_css_class("custom-font");
     view.add_css_class("custom-font");
     let provider = gtk::CssProvider::default();
-    let font_string = font.to_str();
-    let css = format!(".custom-font {{ font: {font_string}; }}");
+    let font_size = font.size().to_string();
+    let font_family = font.family().unwrap_or("Adwaita Mono".into());
+    let css = format!(".custom-font {{ font-family: {font_family}; font-size: {font_size}pt; }}");
     provider.load_from_string(&css);
 
     if let Some(display) = gdk::Display::default() {
@@ -78,20 +80,41 @@ pub fn set_view_font(view: &View, font: &FontDescription) -> Result<()> {
     }
 }
 
-/// Increments font size by size parameter.
-pub fn increment_font_size(font: &mut FontDescription, size: i32) -> &FontDescription {
-    font.set_size(font.size() + size);
-    font
-}
+// /// Increments font size by size parameter.
+// pub fn increment_view_font_size(view: &View, size: i32) -> Result<()> {
+//     let mut font = current_font();
+//     font.set_size(font.size() + size);
+//     set_view_font(view, &font)
+// }
 
-/// Decrements font size by size parameter.
-pub fn decrement_font_size(font: &mut FontDescription, size: i32) -> &FontDescription {
-    font.set_size(font.size() - size);
-    font
-}
+// /// Decrements font size by size parameter.
+// pub fn decrement_view_font_size(view: &View, size: i32) -> Result<()> {
+//     let mut font = current_font();
+//     let font_size = font.size();
+//     debug!("Size: {font_size} Requested: {size}");
+//     font.set_size(font.size() - size);
+//     set_view_font(view, &font)
+// }
 
-/// Gets the default monospace font.
-pub fn default_font() -> FontDescription {
-    let font = adw::StyleManager::default().monospace_font_name();
-    FontDescription::from_string(&font)
+// /// Gets the default monospace font.
+// pub fn default_font() -> FontDescription {
+//     let font = adw::StyleManager::default().monospace_font_name();
+//     FontDescription::from_string(&font)
+// }
+
+// pub fn current_font() -> FontDescription {
+//     // TODO: Get current font from view css
+//     let default = default_font();
+//     let size = 11;
+//     let mut font = FontDescription::new();
+//     font.set_family(&default.family().unwrap());
+//     font.set_size(size);
+//     font
+// }
+
+pub fn generate_font(font_family: &str, font_size: i32) -> FontDescription {
+    let mut font = FontDescription::new();
+    font.set_family(font_family);
+    font.set_size(font_size);
+    font
 }

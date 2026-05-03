@@ -21,13 +21,28 @@ template $AETPreferencesDialog: Adw.PreferencesDialog {
           ];
         };
       }
+
+      Adw.SpinRow font_size_chooser {
+        title: _("Editor Font Size");
+        numeric: true;
+        digits: 0;
+        climb-rate: 1;
+
+        adjustment: Adjustment {
+          lower: 0;
+          upper: 100;
+          value: 11;
+          step-increment: 1;
+        };
+      }
     }
 
     Adw.PreferencesGroup {
       title: _("Reset");
 
       Adw.ButtonRow {
-        title: _("Reset Window Size");
+        title: _("Reset Window State");
+        activated => $on_reset_window_state_btn_pressed(template);
       }
 
       Adw.ButtonRow {
@@ -36,6 +51,7 @@ template $AETPreferencesDialog: Adw.PreferencesDialog {
         ]
 
         title: _("Reset All Settings");
+        activated => $on_reset_all_btn_pressed(template);
       }
     }
   }

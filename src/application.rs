@@ -109,6 +109,15 @@ impl AEToolsApp {
         self.set_accels_for_action("app.quit", &["<Control>q"]);
         self.set_accels_for_action("window.close", &["<Control>w"]);
         self.set_accels_for_action("app.preferences", &["<Control>comma"]);
+        self.set_accels_for_action(
+            "win.increment-view-font-size",
+            &["<Control>plus", "<Control>equal"],
+        );
+        self.set_accels_for_action(
+            "win.decrement-view-font-size",
+            &["<Control>minus", "<Control>underscore"],
+        );
+        self.set_accels_for_action("win.reset-view-font-size", &["<Control>0"]);
     }
 
     fn setup_css(&self) {

@@ -1,6 +1,7 @@
 mod possibility;
 mod possibility_data;
 
+use gtk::pango::FontDescription;
 // Re-exports for parent module
 pub(crate) use possibility::ProceduralPossibility;
 pub(crate) use possibility_data::PossibilityData;
@@ -55,7 +56,7 @@ mod imp {
         #[template_child]
         containing_phrases_generate_btn: TemplateChild<ButtonRow>,
         #[template_child]
-        source_view: TemplateChild<sourceview5::View>,
+        pub(crate) source_view: TemplateChild<sourceview5::View>,
         #[template_child]
         source_buffer: TemplateChild<sourceview5::Buffer>,
     }

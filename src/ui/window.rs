@@ -190,8 +190,9 @@ impl AETApplicationWindow {
             .activate(move |win: &Self, _, _| {
                 let settings = win.imp().settings();
                 let font_size = settings.int("view-font-size");
+                let out = if font_size >= 100 { 100 } else { font_size + 1 };
                 settings
-                    .set_int("view-font-size", font_size + 1)
+                    .set_int("view-font-size", out)
                     .expect("Failed to increment font size");
                 win.imp().update_view_font();
             })
@@ -201,8 +202,9 @@ impl AETApplicationWindow {
             .activate(move |win: &Self, _, _| {
                 let settings = win.imp().settings();
                 let font_size = settings.int("view-font-size");
+                let out = if font_size <= 1 { 1 } else { font_size - 1 };
                 settings
-                    .set_int("view-font-size", font_size - 1)
+                    .set_int("view-font-size", out)
                     .expect("Failed to increment font size");
                 win.imp().update_view_font();
             })

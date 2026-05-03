@@ -4,9 +4,6 @@ use gtk::gdk::{self, prelude::DisplayExt};
 use gtk::glib;
 use gtk::pango::FontDescription;
 use sourceview5::{Buffer, View, prelude::*};
-use tracing::*;
-
-use crate::utils::macros::*;
 
 /// Outputs the input string slice to the clipboard.
 pub fn output_clipboard(content: &str) -> Result<()> {
@@ -79,38 +76,6 @@ pub fn set_view_font(view: &View, font: &FontDescription) -> Result<()> {
         Err(anyhow!("Failed to set view font: display not available"))
     }
 }
-
-// /// Increments font size by size parameter.
-// pub fn increment_view_font_size(view: &View, size: i32) -> Result<()> {
-//     let mut font = current_font();
-//     font.set_size(font.size() + size);
-//     set_view_font(view, &font)
-// }
-
-// /// Decrements font size by size parameter.
-// pub fn decrement_view_font_size(view: &View, size: i32) -> Result<()> {
-//     let mut font = current_font();
-//     let font_size = font.size();
-//     debug!("Size: {font_size} Requested: {size}");
-//     font.set_size(font.size() - size);
-//     set_view_font(view, &font)
-// }
-
-// /// Gets the default monospace font.
-// pub fn default_font() -> FontDescription {
-//     let font = adw::StyleManager::default().monospace_font_name();
-//     FontDescription::from_string(&font)
-// }
-
-// pub fn current_font() -> FontDescription {
-//     // TODO: Get current font from view css
-//     let default = default_font();
-//     let size = 11;
-//     let mut font = FontDescription::new();
-//     font.set_family(&default.family().unwrap());
-//     font.set_size(size);
-//     font
-// }
 
 pub fn generate_font(font_family: &str, font_size: i32) -> FontDescription {
     let mut font = FontDescription::new();

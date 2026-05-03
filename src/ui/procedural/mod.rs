@@ -1,7 +1,6 @@
 mod possibility;
 mod possibility_data;
 
-use gtk::pango::FontDescription;
 // Re-exports for parent module
 pub(crate) use possibility::ProceduralPossibility;
 pub(crate) use possibility_data::PossibilityData;

@@ -3,7 +3,7 @@ mod theme;
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use anyhow::Result;
-use gtk::{gio, glib};
+use gtk::glib;
 use std::cell::OnceCell;
 use tracing::*;
 

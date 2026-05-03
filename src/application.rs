@@ -3,7 +3,7 @@ use tracing::{debug, info};
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::{gdk, gio, glib, pango};
+use gtk::{gdk, gio, glib};
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
 use crate::ui::preferences::AETPreferencesDialog;

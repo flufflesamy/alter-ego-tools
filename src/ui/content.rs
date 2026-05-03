@@ -2,7 +2,6 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use adw::{NavigationPage, Toast, ToastOverlay, ViewStack, ViewStackPage};
 use gtk::glib;
-use gtk::pango::FontDescription;
 use tracing::warn;
 
 use crate::ui::description::Description;

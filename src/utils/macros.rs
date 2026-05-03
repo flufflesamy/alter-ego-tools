@@ -92,4 +92,3 @@ macro_rules! toast_warn {
 pub(crate) use ok_or;
 pub(crate) use toast;
 pub(crate) use toast_error;
-pub(crate) use toast_warn;

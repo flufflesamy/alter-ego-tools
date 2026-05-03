@@ -1,7 +1,6 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
-use sourceview5::prelude::*;
 use tracing::*;
 
 use crate::tools::description::str_to_description;

@@ -1,4 +1,42 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $AETPreferencesDialog: Adw.PreferencesDialog {}
+template $AETPreferencesDialog: Adw.PreferencesDialog {
+  title: _("Preferences");
+
+  Adw.PreferencesPage {
+    title: _("Preferences");
+
+    Adw.PreferencesGroup {
+      title: _("Appearance");
+
+      Adw.ComboRow theme_chooser {
+        title: _("Theme");
+
+        model: StringList {
+          strings: [
+            "System",
+            "Light",
+            "Dark",
+          ];
+        };
+      }
+    }
+
+    Adw.PreferencesGroup {
+      title: _("Reset");
+
+      Adw.ButtonRow {
+        title: _("Reset Window Size");
+      }
+
+      Adw.ButtonRow {
+        styles [
+          "destructive-action",
+        ]
+
+        title: _("Reset All Settings");
+      }
+    }
+  }
+}

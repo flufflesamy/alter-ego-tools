@@ -18,7 +18,6 @@ use gtk::{
     gio::ListStore,
     glib::{self, clone, closure_local},
 };
-use sourceview5::prelude::*;
 
 use crate::tools::procedural::*;
 use crate::utils::macros::*;

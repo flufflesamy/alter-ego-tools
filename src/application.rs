@@ -6,6 +6,7 @@ use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
+use crate::ui::preferences::AETPreferencesDialog;
 use crate::ui::window::AETApplicationWindow;
 
 mod imp {
@@ -92,24 +93,46 @@ impl AEToolsApp {
                 app.show_about_dialog();
             })
             .build();
-        self.add_action_entries([action_quit, action_about]);
+
+        // Preferences
+        let action_preferences = gio::ActionEntry::builder("preferences")
+            .activate(|app: &Self, _, _| {
+                app.show_preferences_dialog();
+            })
+            .build();
+
+        self.add_action_entries([action_quit, action_about, action_preferences]);
     }
 
     // Sets up keyboard shortcuts
     fn setup_accels(&self) {
         self.set_accels_for_action("app.quit", &["<Control>q"]);
         self.set_accels_for_action("window.close", &["<Control>w"]);
+        self.set_accels_for_action("app.preferences", &["<Control>comma"]);
     }
 
     fn setup_css(&self) {
         let provider = gtk::CssProvider::new();
         provider.load_from_resource("/com/flufflesamy/AlterEgoTools/style.css");
+
+        // let font_provider = gtk::CssProvider::new();
+        // let font = pango::FontDescription::from_string(
+        //     &adw::StyleManager::default().monospace_font_name(),
+        // );
+        // let font_string = format!(
+        //     "textview {{ font-family: {}; font-size: {}; }}",
+        //     font.family().unwrap_or("Adwaita Mono".into()).as_str(),
+        //     font.size()
+        // );
+        // font_provider.load_from_string(&font_string);
+
         if let Some(display) = gdk::Display::default() {
             gtk::style_context_add_provider_for_display(
                 &display,
                 &provider,
                 gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
             );
+            // gtk::style_context_add_provider_for_display(&display, &font_provider, 100);
         }
     }
 
@@ -131,6 +154,13 @@ impl AEToolsApp {
             .developer_name("flufflesamy")
             .copyright("© 2026 flufflesamy")
             .build();
+
+        dialog.present(Some(&window));
+    }
+
+    fn show_preferences_dialog(&self) {
+        let window = self.active_window().unwrap();
+        let dialog = AETPreferencesDialog::new();
 
         dialog.present(Some(&window));
     }

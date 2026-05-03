@@ -5,6 +5,7 @@ blueprints = custom_target(
     'ui/content.blp',
     'ui/description.blp',
     'ui/possibility.blp',
+    'ui/preferences.blp',
     'ui/procedural.blp',
     'ui/shortcuts.blp',
     'ui/sidebar.blp',

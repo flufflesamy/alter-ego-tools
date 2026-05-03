@@ -5,6 +5,7 @@ use gtk::{gio, glib};
 use crate::application::AEToolsApp;
 use crate::config::{APP_ID, PROFILE};
 
+use crate::ui::Theme;
 use crate::ui::content::Content;
 use crate::ui::sidebar::Sidebar;
 
@@ -52,7 +53,7 @@ mod imp {
 
             obj.setup_settings();
             obj.setup_actions();
-            obj.bind_settings();
+            obj.set_settings();
             obj.init_sidebar();
         }
     }
@@ -64,10 +65,6 @@ mod imp {
     impl ApplicationWindowImpl for AETApplicationWindow {}
 
     impl AdwApplicationWindowImpl for AETApplicationWindow {}
-
-    //    #[gtk::template_callbacks]
-    //    impl AETApplicationWindow {
-    //    }
 }
 
 glib::wrapper! {
@@ -100,7 +97,16 @@ impl AETApplicationWindow {
             })
             .build();
 
-        self.add_action_entries([show_toast, sidebar_activated]);
+        let set_color_scheme = gio::ActionEntry::builder("set-color-scheme")
+            .parameter_type(Some(&u32::static_variant_type()))
+            .activate(move |_, _, param| {
+                let manager = adw::StyleManager::default();
+                let theme: Theme = param.map_or(0, |t| t.get::<u32>().unwrap_or(0)).into();
+                manager.set_color_scheme(theme.into());
+            })
+            .build();
+
+        self.add_action_entries([show_toast, sidebar_activated, set_color_scheme]);
     }
 
     fn setup_settings(&self) {
@@ -118,7 +124,7 @@ impl AETApplicationWindow {
             .expect("`settings` should be set in `setup_settings`.")
     }
 
-    fn bind_settings(&self) {
+    fn set_settings(&self) {
         let settings = self.settings();
 
         settings.bind("window-width", self, "default-width").build();
@@ -126,6 +132,10 @@ impl AETApplicationWindow {
             .bind("window-height", self, "default-height")
             .build();
         settings.bind("is-maximized", self, "maximized").build();
+
+        // Get setting and set chooser
+        let theme: Theme = settings.string("theme").as_str().into();
+        adw::StyleManager::default().set_color_scheme(theme.into());
     }
 
     fn init_sidebar(&self) {

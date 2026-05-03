@@ -9,6 +9,7 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/content.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/procedural.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/possibility.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/preferences.ui</file>
     <file compressed="true">style.css</file>
     <file preprocess="xml-stripblanks">icons/arrow-into-box-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/plus-symbolic.svg</file>

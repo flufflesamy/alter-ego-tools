@@ -13,6 +13,13 @@
       <default>false</default>
       <summary>Window maximized state</summary>
     </key>
+    <key name="theme" type="s">
+      <choices>
+        <choice value='System'/>
+        <choice value='Light'/>
+        <choice value='Dark'/>
+      </choices>
+      <default>'System'</default>
+    </key>
   </schema>
 </schemalist>
-

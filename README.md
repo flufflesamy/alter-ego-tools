@@ -16,7 +16,9 @@ Creates Alter Ego procedurals and containing phrases.
 
 ## Screenshots
 
-![screenshot](data/resources/screenshots/screenshot1.png)
+![Screenshot of Description Formatter](data/resources/screenshots/screenshot1.png)
+
+![Screenshot of Procedural Generator](data/resources/screenshots/screenshot2.png)
 
 ## Building
 

@@ -1,5 +1,9 @@
 #![allow(dead_code)]
 
+// SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 use anyhow::{Result, anyhow, bail};
 use std::fmt::Display;
 

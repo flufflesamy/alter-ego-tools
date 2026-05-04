@@ -5,7 +5,6 @@ version = 1
 path = [
     "src/**/*.rs",
     "data/resources/**",
-    "Cargo.toml",
     "README.md",
 ]
 SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
@@ -14,9 +13,7 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 # GPL-3.0-or-later — Bilal Elmoussaoui & Amy Poon (template-derived, substantially modified)
 [[annotations]]
 path = [
-    "meson.build",
     ".*/workflows/ci.yml",
-    ".gitlab-ci.yml",
 ]
 precedence = "override"
 SPDX-FileCopyrightText = [
@@ -28,7 +25,6 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 # GPL-3.0-or-later — Translation Authors (translation files)
 [[annotations]]
 path = "po/**.po"
-precedence = "override"
 SPDX-FileCopyrightText = "2026 Translation Authors"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
@@ -47,24 +43,13 @@ SPDX-License-Identifier = "CC0-1.0"
 
 # CC0-1.0 — NONE (generated files)
 [[annotations]]
-path = ["Cargo.lock", "subprojects/*.wrap"]
+path = ["Cargo.lock", "subprojects/*.wrap", "data/resources/icons/*.svg"]
 SPDX-FileCopyrightText = "NONE"
 SPDX-License-Identifier = "CC0-1.0"
 
 # LicenseRef-gtk-rust-template — Bilal Elmoussaoui (unmodified template boilerplate)
 # https://gitlab.gnome.org/World/Rust/gtk-rust-template
 [[annotations]]
-path = [
-    ".editorconfig",
-    ".gitignore",
-    "build-aux/*.sh",
-    "hooks/*",
-    "data/meson.build",
-    "data/icons/meson.build",
-    "data/icons/*.svg",
-    "meson_options.txt",
-    "po/meson.build",
-    "src/meson.build",
-]
+path = [".editorconfig", ".gitignore", "meson_options.txt", "data/icons/*.svg"]
 SPDX-FileCopyrightText = "2019 Bilal Elmoussaoui"
 SPDX-License-Identifier = "LicenseRef-gtk-rust-template"

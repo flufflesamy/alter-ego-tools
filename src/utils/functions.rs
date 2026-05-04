@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 use adw::StyleManager;
 use anyhow::{Result, anyhow, bail};
 use gtk::gdk::{self, prelude::DisplayExt};

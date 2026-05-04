@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Bilal Elmoussaoui
+#
+# SPDX-License-Identifier: LicenseRef-gtk-rust-template
+
 cargo_build_options = [
   '--manifest-path',
   meson.project_source_root() / 'Cargo.toml',

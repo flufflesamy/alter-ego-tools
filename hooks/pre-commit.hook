@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# SPDX-FileCopyrightText: 2019 Bilal Elmoussaoui
+#
+# SPDX-License-Identifier: LicenseRef-gtk-rust-template
 # Source: https://gitlab.gnome.org/GNOME/fractal/blob/master/hooks/pre-commit.hook
 
 install_rustfmt() {

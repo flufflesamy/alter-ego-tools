@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 use adw::ColorScheme;
 use adw::prelude::*;
 use gtk::glib;

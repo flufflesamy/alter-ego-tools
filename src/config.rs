@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2019 Bilal Elmoussaoui
+//
+// SPDX-License-Identifier: LicenseRef-gtk-rust-template
+
 use std::sync::LazyLock;
 
 /// Declares a lazily-initialized static variable that reads its value from a

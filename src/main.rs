@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2019 Bilal Elmoussaoui
 // SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later

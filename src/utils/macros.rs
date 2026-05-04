@@ -1,4 +1,9 @@
 #![allow(unused_macros)]
+
+// SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /// Wrapper around [`Option::ok_or_else`] with error message
 ///
 /// Transforms `Option<T>` to `Result<T, E>`.

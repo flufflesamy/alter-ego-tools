@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Bilal Elmoussaoui
+#
+# SPDX-License-Identifier: LicenseRef-gtk-rust-template
+
 subdir('icons')
 subdir('resources')
 subdir('language-specs')

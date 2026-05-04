@@ -32,7 +32,7 @@ for building GNOME apps with Flatpak and GNOME Builder.
 
 Alter Ego Tools
 
-Copyright (C) 2026 flufflesamy
+Copyright (C) 2026 Amy Poon
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

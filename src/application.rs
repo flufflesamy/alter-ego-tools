@@ -149,8 +149,8 @@ impl AEToolsApp {
             .version(*VERSION)
             .translator_credits(gettext("translator-credits"))
             .developers(Self::authors())
-            .developer_name("flufflesamy")
-            .copyright("© 2026 flufflesamy")
+            .developer_name("Amy Poon")
+            .copyright("© 2026 Amy Poon")
             .build();
 
         dialog.present(Some(&window));

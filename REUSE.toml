@@ -1,41 +1,70 @@
 version = 1
 
-# Source Code
+# GPL-3.0-or-later — Amy Poon (original source code and assets)
 [[annotations]]
-path = ["src/**/*.rs", "data/resources/ui/*"]
+path = [
+    "src/**/*.rs",
+    "data/resources/**",
+    "Cargo.toml",
+    "README.md",
+]
 SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
-# Metadata
+# GPL-3.0-or-later — Bilal Elmoussaoui & Amy Poon (template-derived, substantially modified)
 [[annotations]]
-path = ["build-aux/**.json", "data/**.in"]
-SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
-SPDX-License-Identifier = "CC0-1.0"
+path = [
+    "meson.build",
+    ".*/workflows/ci.yml",
+    ".gitlab-ci.yml",
+]
+precedence = "override"
+SPDX-FileCopyrightText = [
+    "2019 Bilal Elmoussaoui",
+    "2026 Amy Poon <amy@amypoon.me>"
+]
+SPDX-License-Identifier = "GPL-3.0-or-later"
 
-# Trnaslation Metadata
-path = ["po/LINGUAS", "po/POTFILES.in"]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
-SPDX-License-Identifier = "CC0-1.0"
-
-# Translations
+# GPL-3.0-or-later — Translation Authors (translation files)
 [[annotations]]
 path = "po/**.po"
 precedence = "override"
 SPDX-FileCopyrightText = "2026 Translation Authors"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
-# Generated Files
+# CC0-1.0 — Amy Poon (metadata)
 [[annotations]]
-path = ["Cargo.lock"]
+path = [
+    "build-aux/**.json",
+    "data/**.in",
+    "po/LINGUAS",
+    "po/*.in",
+    "alter-ego-tools.doap",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"
+SPDX-License-Identifier = "CC0-1.0"
+
+# CC0-1.0 — NONE (generated files)
+[[annotations]]
+path = ["Cargo.lock", "subprojects/*.wrap"]
 SPDX-FileCopyrightText = "NONE"
 SPDX-License-Identifier = "CC0-1.0"
 
-# Meson Build
+# LicenseRef-gtk-rust-template — Bilal Elmoussaoui (unmodified template boilerplate)
+# https://gitlab.gnome.org/World/Rust/gtk-rust-template
 [[annotations]]
-path = "meson.build"
-SPDX-FileCopyrightText = [
-    "2019 Bilal Elmoussaoui",
-    "2026 Amy Poon <amy@amypoon.me>"
+path = [
+    ".editorconfig",
+    ".gitignore",
+    "build-aux/*.sh",
+    "hooks/*",
+    "data/meson.build",
+    "data/icons/meson.build",
+    "data/icons/*.svg",
+    "meson_options.txt",
+    "po/meson.build",
+    "src/meson.build",
 ]
-SPDX-License-Identifier = "GPL-3.0-or-later"
+SPDX-FileCopyrightText = "2019 Bilal Elmoussaoui"
+SPDX-License-Identifier = "LicenseRef-gtk-rust-template"

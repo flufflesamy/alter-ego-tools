@@ -95,6 +95,7 @@ endif
 
 install_data(
   'LICENSE',
+  'LICENSES/*',
   install_dir: datadir / 'licenses' / application_id,
 )
 

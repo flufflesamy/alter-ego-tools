@@ -143,7 +143,7 @@ impl AEToolsApp {
         let window = self.active_window().unwrap();
         let dialog = adw::AboutDialog::builder()
             .application_name("Alter Ego Tools")
-            .application_icon("com.flufflesamy.AlterEgoTools")
+            .application_icon(*APP_ID)
             .license_type(gtk::License::Gpl30)
             .website("https://github.com/flufflesamy/alter-ego-tools/")
             .version(*VERSION)

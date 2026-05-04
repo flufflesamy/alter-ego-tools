@@ -1,5 +1,6 @@
 subdir('icons')
 subdir('resources')
+subdir('language-specs')
 # Desktop file
 desktop_conf = configuration_data()
 desktop_conf.set('icon', application_id)

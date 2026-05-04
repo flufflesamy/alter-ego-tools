@@ -47,7 +47,7 @@ pub fn buffer_color(manager: &StyleManager, buffer: &Buffer) {
 
 /// Sets the language of the sourceview5 buffer.
 pub fn buffer_language(buffer: &Buffer, language: &str) {
-    if let Some(ref language) = sourceview5::LanguageManager::new().language(language) {
+    if let Some(ref language) = sourceview5::LanguageManager::default().language(language) {
         buffer.set_language(Some(language));
     } else {
         tracing::debug!("Language not found");

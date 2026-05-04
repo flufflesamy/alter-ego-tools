@@ -45,6 +45,8 @@ mod imp {
         #[template_child]
         poss_list_box: TemplateChild<ListBox>,
         #[template_child]
+        poss_name_pattern: TemplateChild<EntryRow>,
+        #[template_child]
         poss_pattern: TemplateChild<EntryRow>,
         #[template_child]
         poss_flag: TemplateChild<ComboRow>,
@@ -211,7 +213,13 @@ mod imp {
 
         fn generate_possible_names(&self) -> Result<String> {
             let proc = self.build_procedural()?;
-            proc.generate_possible_names(self.get_possible_flag()?)
+
+            let pattern = self.poss_name_pattern.text();
+            if pattern.is_empty() {
+                bail!("A pattern must be provided")
+            };
+
+            proc.generate_possible_containing_phrases(&pattern, self.get_possible_flag()?)
         }
 
         fn generate_possible_phrases(&self) -> Result<String> {
@@ -222,7 +230,7 @@ mod imp {
                 bail!("A pattern must be provided")
             };
 
-            proc.generate_possible_containing_phrases(pattern.as_str(), self.get_possible_flag()?)
+            proc.generate_possible_containing_phrases(&pattern, self.get_possible_flag()?)
         }
 
         fn get_possible_flag(&self) -> Result<PossibleFlag> {
@@ -258,7 +266,9 @@ mod imp {
             let procedural = self.generate_procedural();
             match procedural {
                 Ok(procedural) => {
-                    self.source_buffer.set_text(&procedural);
+                    let buffer = self.source_buffer.get();
+                    buffer_language(&buffer, "xml");
+                    buffer.set_text(&procedural);
                 }
                 Err(e) => {
                     toast_error!(self.obj(), "Could not generate procedural", e);
@@ -270,7 +280,9 @@ mod imp {
             let names = self.generate_possible_names();
             match names {
                 Ok(names) => {
-                    self.source_buffer.set_text(&names);
+                    let buffer = self.source_buffer.get();
+                    buffer_language(&buffer, "possnames");
+                    buffer.set_text(&names);
                 }
                 Err(e) => {
                     toast_error!(self.obj(), "Could not generate possible names", e);
@@ -282,7 +294,11 @@ mod imp {
             let phrases = self.generate_possible_phrases();
 
             match phrases {
-                Ok(p) => self.source_buffer.set_text(&p),
+                Ok(p) => {
+                    let buffer = self.source_buffer.get();
+                    buffer_language(&buffer, "possnames");
+                    buffer.set_text(&p)
+                }
                 Err(e) => {
                     toast_error!(self.obj(), "Could not generate possible phrases", e);
                 }

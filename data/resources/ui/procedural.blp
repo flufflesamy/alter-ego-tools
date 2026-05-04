@@ -110,13 +110,16 @@ template $AETContentProcedural: Adw.BreakpointBin {
               "To generate possible names and containing phrases, the procedural must be named and at least one possibility must be named. A pattern with {} as placeholders must be provided as well."
             );
 
+            Adw.EntryRow poss_name_pattern {
+              title: _("Possible Names Pattern");
+            }
+
             Adw.EntryRow poss_pattern {
-              title: _("Possible Pattern");
+              title: _("Possible Containing Phrases Pattern");
             }
 
             Adw.ComboRow poss_flag {
               title: _("Replacement Flag");
-              // TODO: Write subtitle for what this does
               subtitle: _("What to transform pattern placeholders with");
 
               model: StringList {

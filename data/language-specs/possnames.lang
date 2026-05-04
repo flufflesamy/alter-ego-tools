@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+
+SPDX-License-Identifier: LGPL-2.1-or-later
+-->
+
+<language id="possnames" name="Alter Ego Possible Names" version="2.0" _section="Markup">
+  <styles>
+    <style id="procedural-name"   name="Element name"     map-to="def:identifier"/>
+    <style id="possibility"       name="Possibility"      map-to="def:list-marker"/>
+    <style id="possibility-name"  name="Attribute name"   map-to="def:type"/>
+    <style id="possibility-value" name="Attribute value"/>
+    <style id="separator"         name="Separator"/>
+    <style id="error"             name="Error"            map-to="def:error"/>
+  </styles>
+
+  <definitions>
+    <define-regex id="name">[^\[\]:=]*</define-regex>
+
+    <context id="possibility" class="no-spell-check">
+      <start>\[</start>
+      <end>\]</end>
+      <include>
+        <context sub-pattern="0" where="start" style-ref="possibility"/>
+        <context sub-pattern="0" where="end" style-ref="possibility"/>
+        <context ref="procedural-name"/>
+        <context ref="possibility-name"/>
+        <context ref="possibility-value"/>
+      </include>
+    </context>
+
+    <context id="procedural-name" once-only="true" style-ref="procedural-name">
+      <match>\b\%{name}=</match>
+    </context>
+
+    <context id="possibility-name" style-ref="possibility-name">
+      <match>\s*\%{name}:</match>
+    </context>
+
+    <context id="possibility-value" style-ref="possibility-value">
+      <match>\s*\%{name}\b</match>
+    </context>
+
+    <context id="separator" style-ref="separator" class="no-spell-check">
+      <match>,\s*</match>
+    </context>
+
+    <context id="possnames">
+      <include>
+        <context ref="possibility"/>
+        <context ref="separator"/>
+        <context style-ref="error" extend-parent="false">
+          <match>[^ \t]+</match>
+        </context>
+      </include>
+    </context>
+  </definitions>
+</language>

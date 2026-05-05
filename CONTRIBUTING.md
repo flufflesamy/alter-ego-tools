@@ -21,6 +21,16 @@ If you wish to contribute code to Alter Ego Tools, please make a [pull request](
 If you are contributing a large amount of code or a new feature, please discuss it first in the [issues page](https://github.com/flufflesamy/alter-ego-tools/issues)
 before making a contribution.
 
+## Pre-Commit Hooks
+
+This project uses [prek](https://prek.j178.dev/) for pre-commit hooks. The hooks can be found in the repo's `prek.toml`
+file.
+The pre-commit hook includes useful tasks such as validating line endings, running REUSE lint, and cargo clippy and fmt.
+
+To use them, [install prek](https://prek.j178.dev/installation/) and run `prek install` in the root of the repo.
+Now whenever you make a git commit, the hooks will run automatically.
+
+
 ## Copyright Notices
 
 When you contribute code, please attach a copyright notice on each file that you make or modify. Copyright notices
@@ -34,7 +44,7 @@ look something like this:
 ```
 
 Before making a pull request, please download the [reuse tool](https://reuse.readthedocs.io/en/stable/readme.html#install)
-and run the `reuse lint` command to make sure there are no problems.
+and run the `reuse lint` command (or use the pre-commit hook) to make sure there are no problems.
 
 For more information on these notices, refer to [REUSE](https://reuse.software/faq/).
 

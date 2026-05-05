@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+exclude = { glob = ["LICENSES/**/*", "_build/**/*", "target/**/*", "uninstall/**/*"] }
+
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "check-yaml" },
+  { id = "check-toml" },
+  { id = "check-xml" },
+  { id = "mixed-line-ending", args = ["--fix=lf"] },
+  { id = "trailing-whitespace" },
+  { id = "end-of-file-fixer" },
+]
+
+[[repos]]
+repo = "https://codeberg.org/fsfe/reuse-tool"
+rev = "v6.2.0"
+hooks = [
+  { id = "reuse" }
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    "id" = "cargo-fmt",
+    "name" = "cargo fmt",
+    "pass_filenames" = false,
+    "language" = "rust",
+    "language_version" = "nightly",
+    "entry" = "cargo fmt --all -- --check",
+  },
+  {
+    "id" = "cargo-clippy",
+    "name" = "cargo clippy",
+    "pass_filenames" = false,
+    "language" = "rust",
+    "language_version" = "stable",
+    "entry" = "cargo clippy --all-targets --all-features -- -D warnings",
+  }
+]

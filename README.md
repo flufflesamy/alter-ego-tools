@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 # Alter Ego Tools
 
 Tools for [Alter Ego](https://github.com/MolSnoo/Alter-Ego) moderators.

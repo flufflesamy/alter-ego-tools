@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 project(
   'alter-ego-tools',
   'rust',
@@ -99,7 +100,10 @@ if get_option('profile') == 'development'
 endif
 
 install_data(
-  'LICENSE',
+  'LICENSES/CC0-1.0.txt',
+  'LICENSES/GPL-3.0-or-later.txt',
+  'LICENSES/LGPL-2.1-or-later.txt',
+  'LICENSES/LicenseRef-gtk-rust-template.md',
   install_dir: datadir / 'licenses' / application_id,
 )
 

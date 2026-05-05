@@ -16,13 +16,13 @@ Alter Ego Tools provides a set of utilities to help moderators of Alter Ego, an 
 
 Converts plain text into Alter Ego XML descriptions.
 
+![Screenshot of Description Formatter](data/resources/screenshots/screenshot1.png)
+
 ### Procedural Generator
 
-Creates Alter Ego procedurals and containing phrases.
-
-## Screenshots
-
-![Screenshot of Description Formatter](data/resources/screenshots/screenshot1.png)
+Creates Alter Ego procedurals and containing phrases. Supports having an arbitrary amount of possibilities with chances
+for each one.
+Includes syntax highlighting for Alter Ego possible names.
 
 ![Screenshot of Procedural Generator](data/resources/screenshots/screenshot2.png)
 

@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2020 Free Software Foundation Europe e.V.
+#
+# SPDX-License-Identifier: CC0-1.0
+
+name: REUSE compliance check
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: self-hosted
+    container: fsfe/reuse:latest
+    steps:
+      - run: |
+          apk add nodejs
+      - uses: actions/checkout@v5
+      - name: Verify REUSE compliance
+        run: |
+          reuse lint

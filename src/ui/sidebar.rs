@@ -5,11 +5,10 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::glib;
+use gtk::template_callbacks;
+use tracing::error;
 
 mod imp {
-    use gtk::template_callbacks;
-    use tracing::error;
-
     use super::*;
 
     #[derive(Default, gtk::CompositeTemplate)]

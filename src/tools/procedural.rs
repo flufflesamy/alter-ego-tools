@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 // SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -51,27 +49,6 @@ impl Display for Stat {
         write!(f, "{out}")
     }
 }
-
-// impl ToString for Stat
-//     /// Converts the given Stat to a short string.
-//     ///
-//     /// # Examples
-//     /// ```rs
-//     /// let stat_string = Stat::Perception.to_string();
-//     /// let per = String::from("per");
-//     ///
-//     /// assert_eq!(per, stat_string);
-//     /// ```
-//     fn to_string(&self) -> String {
-//         match self {
-//             Stat::Strength => "str".into(),
-//             Stat::Perception => "per".into(),
-//             Stat::Dexterity => "dex".into(),
-//             Stat::Speed => "spd".into(),
-//             Stat::Stamina => "sta".into(),
-//         }
-//     }
-// }
 
 #[derive(Debug, Clone, Copy)]
 pub enum PossibleFlag {
@@ -133,49 +110,10 @@ impl Procedural {
 
     /// Generates Alter Ego possible names string.
     ///
-    /// Can supply a `PossibleFlag` enum to transform name.
-    /// Procedural must have a name and at least one possibility must be named, or function returns error.
-    ///
-    /// # Examples
-    ///
-    /// ```rs
-    /// // Build procedural with builder
-    /// let procedural = ProceduralBuilder::new()
-    ///     // Must have name
-    ///     .name("beverage flavor")
-    ///     // Must have at least one named possibility
-    ///     .possibility(Some("water"), None)
-    ///     .build()
-    ///     .unwrap();
-    /// let names = procedural.generate_possible_names(PossibleFlag::Uppercase).unwrap();
-    /// let expected = "[beverage flavor=water: WATER]";
-    ///
-    /// assert_eq!(names, expected);
-    /// ```
-    pub fn generate_possible_names(&self, flag: PossibleFlag) -> Result<String> {
-        // If procedural doesn't have name, bail
-        let name = self
-            .name
-            .as_deref()
-            .ok_or(anyhow!("Procedural must have name."))?;
-
-        // Turn possibilities into tags
-        let possibilities_tags: Vec<String> = self
-            .get_named_possibilities()?
-            .iter()
-            .map(|p| self.to_possible_name_tag(name, p, flag))
-            .collect();
-
-        // Join tags into string
-        Ok(possibilities_tags.join(", "))
-    }
-
-    /// Generates Alter Ego possible containing phrases string.
-    ///
     /// Can supply a `PossibleFlag` enum to transform name. If no transformation needed, supply `PossibleFlag::None`.
     /// Procedural must have a name and at least one possibility must be named, or function returns error.
     ///
-    /// A pattern string where `{}` denotes the placeholder for the containing phrase must be provided.
+    /// A pattern string where `{}` denotes the placeholder for the possible names must be provided.
     ///
     /// # Examples
     ///
@@ -188,18 +126,15 @@ impl Procedural {
     ///     .possibility(Some("water"), None)
     ///     .build()
     ///     .unwrap();
+    ///
     /// // {} denotes placeholders
     /// let pattern = "a bottle of {}, bottles of {}";
-    /// let names = procedural.generate_possible_containing_phrases(pattern, PossibleFlag::Uppercase).unwrap();
+    /// let names = procedural.generate_possible_names(pattern, PossibleFlag::Uppercase).unwrap();
     /// let expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER]";
     ///
     /// assert_eq!(names, expected);
     /// ```
-    pub fn generate_possible_containing_phrases(
-        &self,
-        pattern: &str,
-        flag: PossibleFlag,
-    ) -> Result<String> {
+    pub fn generate_possible_names(&self, pattern: &str, flag: PossibleFlag) -> Result<String> {
         let name = self
             .name
             .as_deref()
@@ -298,12 +233,6 @@ impl Procedural {
         format!("[{tag_name}={attribute}: {replaced_phrase}]")
     }
 
-    /// Builds a name-tag string of the form `[tag_name=attribute: TRANSFORMED]`.
-    fn to_possible_name_tag(&self, tag_name: &str, attribute: &str, flag: PossibleFlag) -> String {
-        let transformed = self.transform_possible_attribute(attribute, flag);
-        format!("[{tag_name}={attribute}: {transformed}]")
-    }
-
     /// Transforms an attribute string according to the given flag.
     ///
     /// - `PossibleFlag::None` returns the string unchanged.
@@ -343,6 +272,7 @@ pub struct ProceduralBuilder {
     possibilities: Vec<Possibility>,
 }
 
+#[allow(dead_code)]
 impl ProceduralBuilder {
     /// Creates new ProceduralBuilder.
     pub fn new() -> ProceduralBuilder {
@@ -500,31 +430,6 @@ mod tests {
     }
 
     #[test]
-    fn test_possible_names() {
-        let mut builder = Procedural::builder();
-        builder.name("beverage flavor");
-        builder.possibility(Some("water"), Some(66.6));
-        builder.possibility(Some("crush"), None);
-        builder.possibility(Some("sierra mist"), None);
-        builder.possibility(Some("root beer"), None);
-        let uppercase_result = builder
-            .build()
-            .unwrap()
-            .generate_possible_names(PossibleFlag::Uppercase)
-            .unwrap();
-        let lowercase_result = builder
-            .build()
-            .unwrap()
-            .generate_possible_names(PossibleFlag::Lowercase)
-            .unwrap();
-        let uppercase_expected = "[beverage flavor=water: WATER], [beverage flavor=crush: CRUSH], [beverage flavor=sierra mist: SIERRA MIST], [beverage flavor=root beer: ROOT BEER]";
-        let lowercase_expected = "[beverage flavor=water: water], [beverage flavor=crush: crush], [beverage flavor=sierra mist: sierra mist], [beverage flavor=root beer: root beer]";
-
-        assert_eq!(uppercase_result, uppercase_expected);
-        assert_eq!(lowercase_result, lowercase_expected);
-    }
-
-    #[test]
     fn test_possible_containing_phrases() {
         let mut builder = Procedural::builder();
         builder.name("beverage flavor");
@@ -536,12 +441,12 @@ mod tests {
         let uppercase_result = builder
             .build()
             .unwrap()
-            .generate_possible_containing_phrases(pattern, PossibleFlag::Uppercase)
+            .generate_possible_names(pattern, PossibleFlag::Uppercase)
             .unwrap();
         let lowercase_result = builder
             .build()
             .unwrap()
-            .generate_possible_containing_phrases(pattern, PossibleFlag::Lowercase)
+            .generate_possible_names(pattern, PossibleFlag::Lowercase)
             .unwrap();
         let uppercase_expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER], [beverage flavor=crush: a bottle of CRUSH, bottles of CRUSH], [beverage flavor=sierra mist: a bottle of SIERRA MIST, bottles of SIERRA MIST], [beverage flavor=root beer: a bottle of ROOT BEER, bottles of ROOT BEER]";
         let lowercase_expected = "[beverage flavor=water: a bottle of water, bottles of water], [beverage flavor=crush: a bottle of crush, bottles of crush], [beverage flavor=sierra mist: a bottle of sierra mist, bottles of sierra mist], [beverage flavor=root beer: a bottle of root beer, bottles of root beer]";

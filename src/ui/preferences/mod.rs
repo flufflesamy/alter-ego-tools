@@ -8,6 +8,13 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use anyhow::Result;
 use gtk::glib;
+use gtk::{
+    gio::Settings,
+    glib::{
+        clone,
+        subclass::{self},
+    },
+};
 use std::cell::OnceCell;
 use tracing::*;
 
@@ -31,13 +38,6 @@ macro_rules! toast_error {
 }
 
 mod imp {
-    use gtk::{
-        gio::Settings,
-        glib::{
-            clone,
-            subclass::{self},
-        },
-    };
 
     use super::*;
 

@@ -223,7 +223,7 @@ mod imp {
                 bail!("A pattern must be provided")
             };
 
-            proc.generate_possible_containing_phrases(&pattern, self.get_possible_flag()?)
+            proc.generate_possible_names(&pattern, self.get_possible_flag()?)
         }
 
         fn generate_possible_phrases(&self) -> Result<String> {
@@ -234,7 +234,7 @@ mod imp {
                 bail!("A pattern must be provided")
             };
 
-            proc.generate_possible_containing_phrases(&pattern, self.get_possible_flag()?)
+            proc.generate_possible_names(&pattern, self.get_possible_flag()?)
         }
 
         fn get_possible_flag(&self) -> Result<PossibleFlag> {

@@ -13,12 +13,11 @@ use crate::config::{APP_ID, PROFILE};
 use crate::ui::content::Content;
 use crate::ui::preferences::Theme;
 use crate::ui::sidebar::Sidebar;
+use crate::utils::*;
+
+use std::cell::OnceCell;
 
 mod imp {
-    use std::cell::OnceCell;
-
-    use crate::utils::{generate_font, set_view_font};
-
     use super::*;
 
     #[derive(Default, Debug, gtk::CompositeTemplate)]

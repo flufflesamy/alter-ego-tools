@@ -4,12 +4,12 @@
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
+use gtk::glib::Properties;
 use gtk::glib::{self, Object};
+use std::cell::{Cell, RefCell};
 
 mod imp {
     use super::*;
-    use gtk::glib::Properties;
-    use std::cell::{Cell, RefCell};
 
     #[derive(Properties, Default)]
     #[properties(wrapper_type = super::PossibilityData)]

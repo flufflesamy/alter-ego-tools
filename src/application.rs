@@ -8,7 +8,9 @@ use tracing::{debug, info};
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
+use glib::WeakRef;
 use gtk::{gdk, gio, glib};
+use std::cell::OnceCell;
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
 use crate::ui::preferences::AETPreferencesDialog;
@@ -16,8 +18,6 @@ use crate::ui::window::AETApplicationWindow;
 
 mod imp {
     use super::*;
-    use glib::WeakRef;
-    use std::cell::OnceCell;
 
     #[derive(Debug, Default)]
     pub struct AEToolsApp {

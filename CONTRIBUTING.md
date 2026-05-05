@@ -33,6 +33,9 @@ look something like this:
 // SPDX-License-Identifier: GPL-3.0-or-later
 ```
 
+Before making a pull request, please download the [reuse tool](https://reuse.readthedocs.io/en/stable/readme.html#install)
+and run the `reuse lint` command to make sure there are no problems.
+
 For more information on these notices, refer to [REUSE](https://reuse.software/faq/).
 
 ## Getting Help

@@ -50,7 +50,7 @@ if ! which cargo >/dev/null 2>&1 || ! cargo fmt --help >/dev/null 2>&1; then
 fi
 
 echo "--Checking style--"
-cargo fmt --all -- --check
+cargo +nightly fmt --all -- --check
 if test $? != 0; then
     echo "--Checking style fail--"
     echo "Please fix the above issues, either manually or by running: cargo fmt --all"

@@ -4,10 +4,12 @@
 
 use adw::StyleManager;
 use anyhow::{Result, anyhow, bail};
-use gtk::gdk::{self, prelude::DisplayExt};
+use gtk::gdk::prelude::DisplayExt;
+use gtk::gdk::{self};
 use gtk::glib;
 use gtk::pango::FontDescription;
-use sourceview5::{Buffer, View, prelude::*};
+use sourceview5::prelude::*;
+use sourceview5::{Buffer, View};
 
 /// Outputs the input string slice to the clipboard.
 pub fn output_clipboard(content: &str) -> Result<()> {

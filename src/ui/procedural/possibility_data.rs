@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+use std::cell::{Cell, RefCell};
+
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::glib::Properties;
-use gtk::glib::{self, Object};
-use std::cell::{Cell, RefCell};
+use gtk::glib::{self, Object, Properties};
 
 mod imp {
     use super::*;

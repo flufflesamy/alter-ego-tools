@@ -4,8 +4,7 @@
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::glib;
-use gtk::template_callbacks;
+use gtk::{glib, template_callbacks};
 use tracing::error;
 
 mod imp {

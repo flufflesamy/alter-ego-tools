@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+use std::cell::OnceCell;
+
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use anyhow::Result;
@@ -9,13 +11,10 @@ use gtk::{gio, glib};
 
 use crate::application::AEToolsApp;
 use crate::config::{APP_ID, PROFILE};
-
 use crate::ui::content::Content;
 use crate::ui::preferences::Theme;
 use crate::ui::sidebar::Sidebar;
 use crate::utils::*;
-
-use std::cell::OnceCell;
 
 mod imp {
     use super::*;

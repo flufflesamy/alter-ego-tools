@@ -2,12 +2,14 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+use std::cell::RefCell;
+use std::sync::OnceLock;
+
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use adw::{EntryRow, SpinRow, SwitchRow};
-use gtk::glib;
-use gtk::{Button, glib::subclass::Signal, template_callbacks};
-use std::{cell::RefCell, sync::OnceLock};
+use gtk::glib::subclass::Signal;
+use gtk::{Button, glib, template_callbacks};
 
 use crate::ui::procedural::possibility_data::PossibilityData;
 

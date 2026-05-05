@@ -6,22 +6,18 @@ mod possibility;
 mod possibility_data;
 
 // Re-exports for parent module
-pub(crate) use possibility::ProceduralPossibility;
-pub(crate) use possibility_data::PossibilityData;
-
 use std::cell::RefCell;
-
-use anyhow::{Result, bail};
-use tracing::*;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use adw::{ButtonRow, ComboRow, EntryRow, SpinRow, SwitchRow};
-use gtk::{
-    Button, ListBox, StringObject,
-    gio::ListStore,
-    glib::{self, clone, closure_local},
-};
+use anyhow::{Result, bail};
+use gtk::gio::ListStore;
+use gtk::glib::{self, clone, closure_local};
+use gtk::{Button, ListBox, StringObject};
+pub(crate) use possibility::ProceduralPossibility;
+pub(crate) use possibility_data::PossibilityData;
+use tracing::*;
 
 use crate::tools::procedural::*;
 use crate::utils::macros::*;

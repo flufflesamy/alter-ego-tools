@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-use gettextrs::gettext;
-use tracing::{debug, info};
+use std::cell::OnceCell;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
+use gettextrs::gettext;
 use glib::WeakRef;
 use gtk::{gdk, gio, glib};
-use std::cell::OnceCell;
+use tracing::{debug, info};
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
 use crate::ui::preferences::AETPreferencesDialog;

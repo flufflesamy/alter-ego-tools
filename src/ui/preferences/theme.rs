@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+use std::fmt::Display;
+
 use adw::ColorScheme;
 use adw::prelude::*;
 use gtk::glib;
 use gtk::glib::Variant;
-use std::fmt::Display;
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, glib::Enum)]
 #[enum_type(name = "AETTheme")]

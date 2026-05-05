@@ -16,7 +16,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: https://data.forgejo.org/actions/checkout@v6
-      - uses: https://github.com/dtolnay/rust-toolchain@stable
+      - uses: https://github.com/dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
       - run: cargo fmt --all -- --check

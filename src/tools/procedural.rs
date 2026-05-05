@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-use anyhow::{Result, anyhow, bail};
 use std::fmt::Display;
+
+use anyhow::{Result, anyhow, bail};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Stat {
@@ -448,8 +449,16 @@ mod tests {
             .unwrap()
             .generate_possible_names(pattern, PossibleFlag::Lowercase)
             .unwrap();
-        let uppercase_expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER], [beverage flavor=crush: a bottle of CRUSH, bottles of CRUSH], [beverage flavor=sierra mist: a bottle of SIERRA MIST, bottles of SIERRA MIST], [beverage flavor=root beer: a bottle of ROOT BEER, bottles of ROOT BEER]";
-        let lowercase_expected = "[beverage flavor=water: a bottle of water, bottles of water], [beverage flavor=crush: a bottle of crush, bottles of crush], [beverage flavor=sierra mist: a bottle of sierra mist, bottles of sierra mist], [beverage flavor=root beer: a bottle of root beer, bottles of root beer]";
+        let uppercase_expected = "[beverage flavor=water: a bottle of WATER, bottles of WATER], \
+                                  [beverage flavor=crush: a bottle of CRUSH, bottles of CRUSH], \
+                                  [beverage flavor=sierra mist: a bottle of SIERRA MIST, bottles \
+                                  of SIERRA MIST], [beverage flavor=root beer: a bottle of ROOT \
+                                  BEER, bottles of ROOT BEER]";
+        let lowercase_expected = "[beverage flavor=water: a bottle of water, bottles of water], \
+                                  [beverage flavor=crush: a bottle of crush, bottles of crush], \
+                                  [beverage flavor=sierra mist: a bottle of sierra mist, bottles \
+                                  of sierra mist], [beverage flavor=root beer: a bottle of root \
+                                  beer, bottles of root beer]";
 
         assert_eq!(uppercase_result, uppercase_expected);
         assert_eq!(lowercase_result, lowercase_expected);

@@ -4,23 +4,19 @@
 
 mod theme;
 
+use std::cell::OnceCell;
+
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use anyhow::Result;
+use gtk::gio::Settings;
 use gtk::glib;
-use gtk::{
-    gio::Settings,
-    glib::{
-        clone,
-        subclass::{self},
-    },
-};
-use std::cell::OnceCell;
+use gtk::glib::clone;
+use gtk::glib::subclass::{self};
+pub(crate) use theme::Theme;
 use tracing::*;
 
 use crate::config::APP_ID;
-
-pub(crate) use theme::Theme;
 
 macro_rules! toast {
     ($dialog:expr, $msg:literal) => {{

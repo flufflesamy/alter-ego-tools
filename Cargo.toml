@@ -9,7 +9,7 @@ authors = ["Amy Poon <amy@amypoon.me>"]
 repository = "https://github.com/flufflesamy/alter-ego-tools"
 license = "GPL-3.0-or-later"
 edition = "2024"
-rust-version = "1.95"
+rust-version = "1.94"
 publish = false
 
 [profile.release]

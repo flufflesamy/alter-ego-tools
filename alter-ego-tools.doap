@@ -3,7 +3,7 @@
 
   <name xml:lang="en">Alter Ego Tools</name>
   <shortdesc xml:lang="en">
-    Tools for writing Alter Ego worlds.
+    Alter Ego Tools provides a set of utilities to help moderators of Alter Ego, a text-based roleplaying game.
   </shortdesc>
   <bug-database rdf:resource="https://github.com/flufflesamy/alter-ego-tools/"/>
 

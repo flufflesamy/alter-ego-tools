@@ -17,9 +17,7 @@
     ],
     "build-options": {
         "append-path": "/usr/lib/sdk/rust-stable/bin",
-        "build-args": [
-            "--share=network"
-        ],
+        "build-args": [],
         "env": {
             "CARGO_REGISTRIES_CRATES_IO_PROTOCOL": "sparse"
         },
@@ -29,17 +27,6 @@
             "--share=network"
         ]
     },
-    "cleanup": [
-        "/include",
-        "/lib/pkgconfig",
-        "/man",
-        "/share/doc",
-        "/share/gtk-doc",
-        "/share/man",
-        "/share/pkgconfig",
-        "*.la",
-        "*.a"
-    ],
     "modules": [
         {
             "name": "alter-ego-tools",

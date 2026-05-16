@@ -30,7 +30,6 @@ The pre-commit hook includes useful tasks such as validating line endings, runni
 To use them, [install prek](https://prek.j178.dev/installation/) and run `prek install` in the root of the repo.
 Now whenever you make a git commit, the hooks will run automatically.
 
-
 ## Copyright Notices
 
 When you contribute code, please attach a copyright notice on each file that you make or modify. Copyright notices

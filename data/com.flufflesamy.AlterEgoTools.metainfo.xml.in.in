@@ -15,9 +15,12 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <!-- TODO: Update URL to point to a specific release tag or commit once v0.1.0 is tagged -->
       <image>https://github.com/flufflesamy/alter-ego-tools/raw/v0.1.0/data/resources/screenshots/screenshot1.png</image>
-      <caption>Main window</caption>
+      <caption>Description formatter</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/flufflesamy/alter-ego-tools/raw/v0.1.0/data/resources/screenshots/screenshot2.png</image>
+      <caption>Procedural builder</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/flufflesamy/alter-ego-tools</url>
@@ -37,7 +40,7 @@
     </release>
   </releases>
   <developer id="com.flufflesamy">
-    <name translate="no">flufflesamy</name>
+    <name translate="no">Amy Poon</name>
   </developer>
   <!--
     Branding colors:

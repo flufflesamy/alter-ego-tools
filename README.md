@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Alter Ego Tools
 
-Tools for [Alter Ego](https://github.com/MolSnoo/Alter-Ego) moderators.
+Tools for [Alter Ego](https://github.com/MsVBLANK/Alter-Ego) moderators.
 
 Alter Ego Tools provides a set of utilities to help moderators of Alter Ego, an open-source Discord bot that facilitates an in-depth, multiplayer text adventure role-playing game.
 
@@ -25,6 +25,39 @@ for each one.
 Includes syntax highlighting for Alter Ego possible names.
 
 ![Screenshot of Procedural Generator](data/resources/screenshots/screenshot2.png)
+
+## Installation
+
+### System Requirements
+
+Any x86-64 system running a modern Linux distribution with Flatpak support.
+
+### Installing with Flatpak
+
+Make sure that your system has [Flatpak](https://flatpak.org/) installed, then add the Alter Ego Tools Flatpak repo
+and install the app:
+
+```sh
+flatpak remote-add --if-not-exists alter-ego-tools https://flufflesamy.github.io/alter-ego-tools/index.flatpakrepo
+flatpak install alter-ego-tools com.flufflesamy.AlterEgoTools
+```
+
+### Updating
+
+To update Alter Ego Tools, use Flatpak's update command:
+
+```sh
+flatpak update
+```
+
+### Uninstalling
+
+To uninstall Alter Ego Tools, run the following command:
+
+```sh
+flatpak uninstall com.flufflesamy.AlterEgoTools
+flatpak remote-remove alter-ego-tools
+```
 
 ## Building
 

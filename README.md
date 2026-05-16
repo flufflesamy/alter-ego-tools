@@ -34,7 +34,7 @@ Any x86-64 system running a modern Linux distribution with Flatpak support.
 
 ### Installing with Flatpak
 
-Make sure that your system has [Flatpak](https://flatpak.org/) installed, then add the Alter Ego Tools Flatpak repo
+<!--Make sure that your system has [Flatpak](https://flatpak.org/) installed, then add the Alter Ego Tools Flatpak repo
 and install the app:
 
 ```sh
@@ -48,15 +48,27 @@ To update Alter Ego Tools, use Flatpak's update command:
 
 ```sh
 flatpak update
+```-->
+
+Make sure that your system has [Flatpak](https://flatpak.org/) installed, then
+download the Alter Ego flatpak bundle from [GitHub Releases](https://github.com/flufflesamy/alter-ego-tools/releases/latest), then install with the following command:
+
+```sh
+# Replace [VERSION] with the actual version number
+flatpak install alter-ego-tools-[VERSION].flatpak
 ```
 
 ### Uninstalling
 
 To uninstall Alter Ego Tools, run the following command:
 
-```sh
+<!--```sh
 flatpak uninstall com.flufflesamy.AlterEgoTools
 flatpak remote-remove alter-ego-tools
+```-->
+
+```sh
+flatpak uninstall com.flufflesamy.AlterEgoTools
 ```
 
 ## Building

@@ -33,9 +33,9 @@
   <content_rating type="oars-1.1"/>
   <releases>
     <!-- TODO: Update date to match the actual release date -->
-    <release version="0.1.0" date="2026-01-01">
+    <release version="0.1.0" date="2026-05-16">
       <description>
-        <p>Initial release.</p>
+        <p>Initial release supporting Alter Ego 2.0.0.</p>
       </description>
     </release>
   </releases>

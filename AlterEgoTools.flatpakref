@@ -1,0 +1,15 @@
+; SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+;
+; SPDX-License-Identifier: CC0-1.0
+
+[Flatpak Ref]
+Title=Alter Ego Tools
+Name=com.flufflesamy.AlterEgoTools
+Branch=main
+Url=https://github.com/flufflesamy/alter-ego-tools
+SuggestRemoteName=flufflesamy
+Homepage=https://github.com/flufflesamy/alter-ego-tools
+Icon=https://github.com/flufflesamy/alter-ego-tools/raw/refs/heads/main/data/icons/com.flufflesamy.AlterEgoTools.svg
+RuntimeRepo=https://dl.flufflesamy.com/repo/flufflesamy.flatpakrepo
+IsRuntime=false
+GPGKey=mDMEagoLzBYJKwYBBAHaRw8BAQdAxsRaaBxQEABPJ2jVut9wTcOL5hZP5sr9VJoRde7ipjK0I0FteSBQb29uIChGbGF0cGFrKSA8YW15QGFteXBvb24ubWU+iJMEExYKADsWIQRe7V5wID7Rj9WJMANr9s5bxxuWNAUCagoLzAIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRBr9s5bxxuWNIu2AP0Xm/EWc3GBYiGMjDhIvWzRiBbpB9utRQ5macD5FBN+oAEAs5eoidsk3+Aic6LBudRpfniWzB9PCvv5blzhUHQikwG4OARqCgvMEgorBgEEAZdVAQUBAQdA86YQhO2opwFebIs1YnJlGm/kGmDt5QMwZAgZbO1SHT8DAQgHiHgEGBYKACAWIQRe7V5wID7Rj9WJMANr9s5bxxuWNAUCagoLzAIbDAAKCRBr9s5bxxuWNP3nAQCTucE2WiAzILDRUpUe7MABL5wUdfooaa0EmAWmYIvcqwEA2AeHc4i4YScZGiJcVcRIhEV4rxCy1fi4dlSqNjP7+As=

@@ -39,8 +39,10 @@
             ],
             "sources": [
                 {
-                    "type": "dir",
-                    "path": "../"
+                    "type": "git",
+                    "url": "https://github.com/flufflesamy/alter-ego-tools.git",
+                    "tag": "v0.1.0",
+                    "commit": "ea86a443b76570638f3b3c2f5d3135e44677e235"
                 }
             ]
         }

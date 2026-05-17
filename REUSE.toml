@@ -23,6 +23,7 @@ path = [
     "po/LINGUAS",
     "po/*.in",
     "alter-ego-tools.doap",
+    "com.flufflesamy.AlterEgoTools.flatpakref"
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Amy Poon <amy@amypoon.me>"

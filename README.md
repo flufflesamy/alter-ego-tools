@@ -34,12 +34,11 @@ Any x86-64 system running a modern Linux distribution with Flatpak support.
 
 ### Installing with Flatpak
 
-<!--Make sure that your system has [Flatpak](https://flatpak.org/) installed, then add the Alter Ego Tools Flatpak repo
-and install the app:
+Make sure that your system has [Flatpak](https://flatpak.org/) installed, then run the following command to install
+Alter Ego Tools.
 
 ```sh
-flatpak remote-add --if-not-exists alter-ego-tools https://flufflesamy.github.io/alter-ego-tools/index.flatpakrepo
-flatpak install alter-ego-tools com.flufflesamy.AlterEgoTools
+flatpak install https://dl.flufflesamy.com/repo/appstream/com.flufflesamy.AlterEgoTools.flatpakref
 ```
 
 ### Updating
@@ -48,28 +47,28 @@ To update Alter Ego Tools, use Flatpak's update command:
 
 ```sh
 flatpak update
-```-->
+```
 
-Make sure that your system has [Flatpak](https://flatpak.org/) installed, then
+<!--Make sure that your system has [Flatpak](https://flatpak.org/) installed, then
 download the Alter Ego flatpak bundle from [GitHub Releases](https://github.com/flufflesamy/alter-ego-tools/releases/latest), then install with the following command:
 
 ```sh
 # Replace [VERSION] with the actual version number
 flatpak install alter-ego-tools-[VERSION].flatpak
-```
+```-->
 
 ### Uninstalling
 
-To uninstall Alter Ego Tools, run the following command:
-
-<!--```sh
-flatpak uninstall com.flufflesamy.AlterEgoTools
-flatpak remote-remove alter-ego-tools
-```-->
+To uninstall Alter Ego Tools and remove its Flatpak repo, run the following command.
 
 ```sh
 flatpak uninstall com.flufflesamy.AlterEgoTools
+flatpak remote-remove flufflesamy
 ```
+
+<!--```sh
+flatpak uninstall com.flufflesamy.AlterEgoTools
+```-->
 
 ## Building
 

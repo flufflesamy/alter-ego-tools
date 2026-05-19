@@ -17,7 +17,6 @@ use gtk::glib::{self, clone, closure_local};
 use gtk::{Button, ListBox, StringObject};
 pub(crate) use possibility::ProceduralPossibility;
 pub(crate) use possibility_data::PossibilityData;
-use tracing::*;
 
 use crate::tools::procedural::*;
 use crate::utils::macros::*;
@@ -271,7 +270,7 @@ mod imp {
                     buffer.set_text(&procedural);
                 }
                 Err(e) => {
-                    toast_error!(self.obj(), "Could not generate procedural", e);
+                    toast_error!(self.obj(), "Error:", e);
                 }
             }
         }
@@ -285,7 +284,7 @@ mod imp {
                     buffer.set_text(&names);
                 }
                 Err(e) => {
-                    toast_error!(self.obj(), "Could not generate possible names", e);
+                    toast_error!(self.obj(), "Error:", e);
                 }
             }
         }
@@ -300,7 +299,7 @@ mod imp {
                     buffer.set_text(&p)
                 }
                 Err(e) => {
-                    toast_error!(self.obj(), "Could not generate possible phrases", e);
+                    toast_error!(self.obj(), "Error:", e);
                 }
             }
         }

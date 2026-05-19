@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 using Gtk 4.0;
 using Adw 1;
 
@@ -28,6 +27,13 @@ template $AETContent: Adw.NavigationPage {
         title: _("Procedural Generator");
 
         child: $AETContentProcedural procedural {};
+      }
+
+      Adw.ViewStackPage {
+        name: "command_set";
+        title: _("Command Set Generator");
+
+        child: $AETContentCommandSet command_set {};
       }
     };
   };

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+pub mod command_set;
 pub mod content;
 pub mod description;
 pub mod preferences;

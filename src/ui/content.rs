@@ -8,6 +8,7 @@ use adw::{NavigationPage, Toast, ToastOverlay, ViewStack, ViewStackPage};
 use gtk::glib;
 use tracing::warn;
 
+use crate::ui::command_set::ContentCommandSet;
 use crate::ui::description::Description;
 use crate::ui::procedural::ContentProcedural;
 
@@ -24,6 +25,8 @@ mod imp {
         pub(crate) description: TemplateChild<Description>,
         #[template_child]
         pub(crate) procedural: TemplateChild<ContentProcedural>,
+        #[template_child]
+        pub(crate) command_set: TemplateChild<ContentCommandSet>,
         #[template_child]
         toast_overlay: TemplateChild<ToastOverlay>,
     }

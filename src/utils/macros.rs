@@ -19,7 +19,7 @@
 /// assert_eq!(result, Ok(42));
 /// ```
 macro_rules! ok_or {
-    ($e:expr, $msg:literal) => {
+    ($e:expr, $msg:expr) => {
         $e.ok_or_else(|| {
             tracing::error!("{}", $msg);
             anyhow::anyhow!($msg)
@@ -46,7 +46,7 @@ macro_rules! ok_or {
 macro_rules! toast {
     ($obj:expr, $msg:literal) => {
         $obj.activate_action("win.show-toast", Some(&$msg.to_variant()))
-            .map_or_else(|e| error!("Could not show toast: {e}."), |_| ())
+            .map_or_else(|e| tracing::error!("Could not show toast: {e}."), |_| ())
     };
 }
 
@@ -67,10 +67,11 @@ macro_rules! toast {
 /// toast_error!(self, "Something bad happened", err);
 /// ```
 macro_rules! toast_error {
-    ($self:expr, $msg:literal, $e:expr) => {{
-        let err = $e;
-        toast!($self, $msg);
-        tracing::error!("{}: {err}", $msg)
+    ($obj:expr, $msg:literal, $e:expr) => {{
+        let err_string = std::format!("{} {}", $msg, $e);
+        tracing::error!("{} {}", $msg, $e);
+        $obj.activate_action("win.show-toast", Some(&err_string.to_variant()))
+            .map_or_else(|e| tracing::error!("Could not show toast: {e}."), |_| ());
     }};
 }
 

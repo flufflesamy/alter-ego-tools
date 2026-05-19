@@ -1,0 +1,22 @@
+// SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+using Gtk 4.0;
+using Adw 1;
+
+template $AETContentCommandSetItem: ListBoxRow {
+  Adw.EntryRow text {
+    title: _("Data");
+
+    [suffix]
+    Button remove_btn {
+      has-frame: false;
+      valign: center;
+      clicked => $on_remove_btn_clicked(template);
+
+      Adw.ButtonContent {
+        icon-name: "minus-symbolic";
+      }
+    }
+  }
+}

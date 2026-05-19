@@ -89,3 +89,47 @@ pub fn generate_font(font_family: &str, font_size: i32) -> FontDescription {
     font.set_size(font_size);
     font
 }
+
+// pub fn setup_list<I: IsA<gtk::Widget> + ListItem, D: IsA<glib::Object>>(
+//     list: &RefCell<Option<ListStore>>,
+//     list_box: &TemplateChild<ListBox>,
+// ) {
+//     // Creat new model
+//     let model = ListStore::new::<D>();
+
+//     // Set listbox model
+//     list.replace(Some(model));
+
+//     // Borrow listbox model
+//     let model = list.borrow().clone().expect("");
+
+//     // Bind model to listbox
+//     list_box.bind_model(
+//         Some(&model),
+//         clone!(
+//             #[strong]
+//             model,
+//             move |data| {
+//                 // Create item widget from data
+//                 let item = I::new(data.downcast_ref::<D>().expect("Model is of wrong type."));
+
+//                 // Connect remove signal to remove model item
+//                 item.connect_closure(
+//                     "remove",
+//                     false,
+//                     closure_local!(
+//                         #[weak]
+//                         model,
+//                         #[weak]
+//                         data,
+//                         move |_item: I| {
+//                             model.remove(model.find(&data).expect("Item not found in model"))
+//                         }
+//                     ),
+//                 );
+
+//                 item.upcast::<gtk::Widget>()
+//             }
+//         ),
+//     );
+// }

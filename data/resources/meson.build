@@ -14,6 +14,8 @@ blueprints = custom_target(
     'ui/shortcuts.blp',
     'ui/sidebar.blp',
     'ui/window.blp',
+    'ui/command_set.blp',
+    'ui/command_set_item.blp',
   ),
   output: '.',
   command: [

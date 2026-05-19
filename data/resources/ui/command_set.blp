@@ -1,0 +1,172 @@
+// SPDX-FileCopyrightText: 2026 Amy Poon <amy@amypoon.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+using Gtk 4.0;
+using Adw 1;
+using GtkSource 5;
+
+template $AETContentCommandSet: Adw.BreakpointBin {
+  vexpand: true;
+  hexpand: true;
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
+
+    Box {
+      homogeneous: true;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+      // Prefs frame
+      Frame {
+        hexpand: true;
+
+        child: Adw.PreferencesPage {
+          title: _("Puzzle Command Set");
+
+          Adw.PreferencesGroup {
+            title: _("Puzzle Command Set");
+            description: _("An Alter Ego puzzle command set");
+
+            header-suffix: Button clear_btn {
+              styles [
+                "destructive-action",
+              ]
+
+              has-frame: false;
+              clicked => $on_clear_btn_clicked(template);
+
+              child: Adw.ButtonContent {
+                label: _("Clear");
+                icon-name: "user-trash-symbolic";
+              };
+            };
+
+            Adw.EntryRow capture_string {
+              title: _("Regex Capture String");
+            }
+          }
+
+          Adw.PreferencesGroup outcomes_group {
+            title: _("Outcomes");
+            description: _("List of outcomes.");
+
+            ListBox outcomes_list {
+              styles [
+                "boxed-list-separate",
+              ]
+
+              selection-mode: none;
+            }
+          }
+
+          Adw.PreferencesGroup {
+            Adw.ButtonRow outcomes_add_btn {
+              title: _("Add Outcome");
+              end-icon-name: "plus-symbolic";
+              activated => $on_outcomes_add_btn_activated(template);
+            }
+          }
+
+          Adw.PreferencesGroup solved_commands_group {
+            title: _("Solved Commands");
+            description: _("List of solved commands.");
+
+            ListBox solved_commands_list {
+              styles [
+                "boxed-list-separate",
+              ]
+
+              selection-mode: none;
+            }
+          }
+
+          Adw.PreferencesGroup {
+            Adw.ButtonRow solved_commands_add_btn {
+              title: _("Add Solved Command");
+              end-icon-name: "plus-symbolic";
+              activated => $on_solved_commands_add_btn_activated(template);
+            }
+          }
+
+          Adw.PreferencesGroup unsolved_commands_group {
+            title: _("Unsolved Commands");
+            description: _("List of unsolved commands.");
+
+            ListBox unsolved_commands_list {
+              styles [
+                "boxed-list-separate",
+              ]
+
+              selection-mode: none;
+            }
+          }
+
+          Adw.PreferencesGroup {
+            Adw.ButtonRow unsolved_commands_add_btn {
+              title: _("Add Unsolved Command");
+              end-icon-name: "plus-symbolic";
+              activated => $on_unsolved_commands_add_btn_activated(template);
+            }
+          }
+
+          Adw.PreferencesGroup {
+            Adw.ButtonRow generate_btn {
+              styles [
+                "suggested-action",
+              ]
+
+              title: _("Generate");
+              activated => $on_generate_btn_activated(template);
+            }
+          }
+        };
+      }
+
+      // Source view frame
+      Frame {
+        hexpand: true;
+
+        child: Box {
+          orientation: vertical;
+
+          ScrolledWindow {
+            vexpand: true;
+            hscrollbar-policy: never;
+
+            child: GtkSource.View source_view {
+              monospace: true;
+              tab-width: 2;
+              auto-indent: true;
+              wrap-mode: word_char;
+
+              buffer: GtkSource.Buffer source_buffer {
+                highlight-syntax: true;
+                highlight-matching-brackets: true;
+              };
+            };
+          }
+
+          Box {
+            styles [
+              "toolbar",
+            ]
+
+            orientation: horizontal;
+            halign: end;
+
+            Button copy_btn {
+              clicked => $on_copy_btn_clicked(template);
+
+              Adw.ButtonContent {
+                label: _("Copy");
+                icon-name: "edit-copy-symbolic";
+              }
+            }
+          }
+        };
+      }
+    }
+  };
+}

@@ -13,7 +13,7 @@
         "--socket=wayland",
         "--device=dri",
         "--env=RUST_LOG=alter_ego_tools=debug",
-        "--env=G_MESSAGES_DEBUG=all",
+        "--env=G_MESSAGES_DEBUG=warning error",
         "--env=RUST_BACKTRACE=1"
     ],
     "build-options": {

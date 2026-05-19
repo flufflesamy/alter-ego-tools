@@ -5,7 +5,6 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
-use tracing::*;
 
 use crate::tools::description::str_to_description;
 use crate::utils::macros::*;
@@ -82,7 +81,7 @@ mod imp {
                     toast!(self.obj(), "Generated description.");
                 }
                 Err(e) => {
-                    toast_error!(self.obj(), "Cannot generate description", e);
+                    toast_error!(self.obj(), "Error:", e);
                 }
             }
         }

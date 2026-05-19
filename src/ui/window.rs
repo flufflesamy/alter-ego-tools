@@ -124,10 +124,12 @@ mod imp {
             let settings = self.settings();
             let description = self.content.get().imp().description.get();
             let procedural = self.content.get().imp().procedural.get();
+            let command_set = self.content.get().imp().command_set.get();
             let views = [
                 description.imp().input_text.get(),
                 description.imp().output_text.get(),
                 procedural.imp().source_view.get(),
+                command_set.imp().source_view.get(),
             ];
 
             // Set view font

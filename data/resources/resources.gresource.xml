@@ -17,6 +17,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <file compressed="true" preprocess="xml-stripblanks">ui/procedural.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/possibility.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/preferences.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/command_set.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/command_set_item.ui</file>
     <file compressed="true">style.css</file>
     <file preprocess="xml-stripblanks">icons/arrow-into-box-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/plus-symbolic.svg</file>

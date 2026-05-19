@@ -8,7 +8,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 

@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.2.0]
+
 ### Added
 
 - Puzzle command set generator.
@@ -26,5 +28,6 @@ All notable changes to this project will be documented in this file.
 
 - Initial release supporting Alter Ego 2.0.0.
 
-[Unreleased]: https://github.com/flufflesamy/alter-ego-tools/releases/tag/v0.1.0...HEAD
+[Unreleased]: https://github.com/flufflesamy/alter-ego-tools/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/flufflesamy/alter-ego-tools/releases/tag/v0.2.0
 [0.1.0]: https://github.com/flufflesamy/alter-ego-tools/releases/tag/v0.1.0
